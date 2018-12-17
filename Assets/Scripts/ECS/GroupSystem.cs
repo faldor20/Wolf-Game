@@ -1,18 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
-
-public class GroupSystem : MonoBehaviour
+public class GroupSystem : ComponentSystem
 {
-    // Start is called before the first frame update
-    void Start()
+    struct Data
     {
-        
+        public GroupID groupID;
+        public Vision vision;
     }
-
     // Update is called once per frame
-    void Update()
+    protected override void OnUpdate()
     {
-        
+        GetEntities();
     }
 }

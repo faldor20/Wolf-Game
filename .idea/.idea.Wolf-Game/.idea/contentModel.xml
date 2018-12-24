@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Eli\.Rider2018.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Eli\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_Wolf-Game.-2010508070.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Eli\Documents\unity\Wolf-Game" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="ColliderController.cs" t="Include" />
+        <e p="GalacticConquest" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="Data" t="Include">
+              <e p="PlanetData.cs" t="Include" />
+              <e p="PlanetShipLaunchData.cs" t="Include" />
+              <e p="ShipData.cs" t="Include" />
+            </e>
+            <e p="Other" t="Include">
+              <e p="AutoPlay.cs" t="Include" />
+              <e p="OccupantsTextUpdater.cs" t="Include" />
+              <e p="PlanetUtility.cs" t="Include" />
+              <e p="PrefabManager.cs" t="Include" />
+            </e>
+            <e p="Spawners" t="Include">
+              <e p="PlanetSpawner.cs" t="Include" />
+            </e>
+            <e p="Systems" t="Include">
+              <e p="OccupantIncreaseSystem.cs" t="Include" />
+              <e p="RotationSystem.cs" t="Include" />
+              <e p="ShipArrivalSystem.cs" t="Include" />
+              <e p="ShipMovementSystem.cs" t="Include" />
+              <e p="ShipSpawnSystem.cs" t="Include" />
+              <e p="UserInputSystem.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="MassController.cs" t="Include" />
+        <e p="MouseController.cs" t="Include" />
+        <e p="mousefollow.cs" t="Include" />
+        <e p="NewBehaviourScript.cs" t="Include" />
+        <e p="Plugins" t="Include">
+          <e p="GitHub" t="Include">
+            <e p="Editor" t="Include">
+              <e p="credits.txt" t="Include" />
+              <e p="eula.txt" t="Include" />
+              <e p="ExtensionLoader.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="RaycastView.cs" t="Include" />
+        <e p="Scripts" t="Include">
+          <e p="ECS" t="Include">
+            <e p="Components.cs" t="Include" />
+            <e p="GroupComponent.cs" t="Include" />
+            <e p="GroupDirectionSystem.cs" t="Include" />
+            <e p="GroupmanagerComponent.cs" t="Include" />
+            <e p="GroupSystem.cs" t="Include" />
+            <e p="InputComponent.cs" t="Include" />
+            <e p="InputSystem.cs" t="Include" />
+            <e p="MemberOfGroupComponent.cs" t="Include" />
+            <e p="MoveComponent.cs" t="Include" />
+            <e p="PlayerMovementSystem.cs" t="Include" />
+            <e p="PreyMover.cs" t="Include" />
+          </e>
+          <e p="Normal" t="Include">
+            <e p="PlayerController.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="GalacticConquest.csproj" t="IncludeRecursive" />
+      <e p="Library" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp" t="ExcludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+      </e>
+      <e p="Wolf-Game.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>

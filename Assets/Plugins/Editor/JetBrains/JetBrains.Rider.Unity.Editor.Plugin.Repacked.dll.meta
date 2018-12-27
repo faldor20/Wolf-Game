@@ -1,32 +1,38 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Assets/Plugins/Editor/JetBrains/JetBrains.Rider.Unity.Editor.Plugin.Repacked.dll.meta
 guid: 2d1a4666e062178448f2fe15ca3eb3ba
+=======
+guid: c743ae24ee231884887054d20ccdd0ab
+timeCreated: 1534504082
+licenseType: Free
+>>>>>>> Stashed changes:Assets/Plugins/GitHub/Editor/GitHub.Api.45.dll.meta
 PluginImporter:
-  externalObjects: {}
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
-  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
-  isExplicitlyReferenced: 0
   platformData:
-  - first:
-      Any: 
-    second:
-      enabled: 0
-      settings: {}
-  - first:
-      Editor: Editor
-    second:
-      enabled: 1
-      settings:
-        DefaultValueInitialized: true
-  - first:
-      Windows Store Apps: WindowsStoreApps
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+    data:
+      first:
+        Any:
+      second:
+        enabled: 0
+        settings: {}
+    data:
+      first:
+        Editor: Editor
+      second:
+        enabled: 0
+        settings:
+          DefaultValueInitialized: true
+    data:
+      first:
+        Windows Store Apps: WindowsStoreApps
+      second:
+        enabled: 0
+        settings:
+          CPU: AnyCPU
+  userData:
+  assetBundleName:
+  assetBundleVariant:

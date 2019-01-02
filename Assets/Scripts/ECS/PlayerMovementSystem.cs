@@ -14,14 +14,14 @@ public class PlayerMovementSystem : ComponentSystem
     }
 
     [Inject] private Players _players;
-    protected override void OnUpdate ()
+    protected override void OnUpdate()
     {
         float deltaTime = Time.deltaTime;
         for (int i = 0; i < _players.Length; i++)
         {
-            Move (
-                _players.InputComponents[i].Horizontal,
-                _players.InputComponents[i].Vertical,
+            Vector3 input = new Vector3(_players.InputComponents[i].Horizontal, 0, _players.InputComponents[i].Vertical);
+            Move(
+                input,
                 _players.RigidBody[i],
                 _players.Transform[i],
                 deltaTime,
@@ -30,15 +30,15 @@ public class PlayerMovementSystem : ComponentSystem
             );
         }
     }
-    void Move (float hzInput, float vrInput, Rigidbody m_Rigidbody, Transform transform, float deltaTime, float MaxTurnSpeed, float MoveSpeed)
+    void Move(Vector3 direction, Rigidbody m_Rigidbody, Transform transform, float deltaTime, float MaxTurnSpeed, float MoveSpeed)
     {
-        Vector3 input = new Vector3 (hzInput, 0, vrInput);
-        m_Rigidbody.AddForce ((input * MoveSpeed) * Time.deltaTime);
+
+        m_Rigidbody.AddForce((direction * MoveSpeed) * deltaTime);
         if (m_Rigidbody.velocity.magnitude > 0.01f)
         {
-            m_Rigidbody.MoveRotation (Quaternion.LookRotation (new Vector3 (m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z)));
+            m_Rigidbody.MoveRotation(Quaternion.LookRotation(new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z)));
         }
-        Quaternion wanted_rotation = Quaternion.LookRotation (new Vector3 (m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z));
-        Quaternion.RotateTowards (transform.rotation, wanted_rotation, MaxTurnSpeed * Time.deltaTime);
+        Quaternion wanted_rotation = Quaternion.LookRotation(new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z));
+        Quaternion.RotateTowards(transform.rotation, wanted_rotation, MaxTurnSpeed * deltaTime);
     }
 }

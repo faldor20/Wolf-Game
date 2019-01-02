@@ -5,6 +5,6 @@ using UnityEngine;
 public class GroupComponent : MonoBehaviour
 
 {
-   //public int ID;
-   public Vector3 Direction;
+   public int ID;
+   //public Vector3 Direction;
 }

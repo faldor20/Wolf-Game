@@ -26,8 +26,8 @@ public class SafenessUpdaterSystem : ComponentSystem
             NearbyPrey = Physics.OverlapSphere(_prey.Transform[i].position, _prey.SightComponent[i].Close, 9); //need to set the layermask
             for (int j = 0; j < NearbyPrey.Length; j++)
             {
-                if (NearbyPrey[i].CompareTag("Predator")) _prey.SafenessComponent[i].Safeness -= 3; // This amount is temporary and will probably increase to offset the relative rareness of wolfs
-                else if (NearbyPrey[i].CompareTag("Prey"))
+                if (NearbyPrey[j].CompareTag("Predator")) _prey.SafenessComponent[i].Safeness -= 3; // This amount is temporary and will probably increase to offset the relative rareness of wolfs
+                else if (NearbyPrey[j].CompareTag("Prey"))
                 {
                     _prey.SafenessComponent[i].Safeness++;
                 }

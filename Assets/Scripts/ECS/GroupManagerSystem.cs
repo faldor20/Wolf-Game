@@ -2,39 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
+[UpdateAfter(typeof(ElkSpawner))]
 public class GroupManagerSystem : ComponentSystem
 {
+    bool preygot = false;
     struct Prey
     {
         public readonly int Length;
         public ComponentArray<GroupComponent> GroupComponent;
         public ComponentArray<Transform> Transform;
     }
+    struct GroupManager
+    {
+        public readonly int Length;
+        public ComponentArray<GroupmanagerComponent> Manager;
+    }
 
-    [Inject] private ComponentArray<GroupmanagerComponent> _groupManager;
+    [Inject] GroupManager _groupManager;
     [Inject] private Prey _prey;
     // Update is called once per frame
     protected override void OnUpdate()
     {
-        for (int i = 0; i < _groupManager[0].PreyTransform.Length; i++)
+        GroupmanagerComponent groupManager = null;
+        if (_groupManager.Length != 0)
+            groupManager = _groupManager.Manager[0];
+        else Debug.LogError("No Group Manager component in scene");
+        if (preygot == false)
+        {
+            GetPreyForEachGroup(groupManager);
+            preygot = true;
+        }
+        for (int i = 0; i < groupManager.PreyTransform.Length; i++)
         {
             Vector3 groupPosition = Vector3.zero;
             for (int j = 0; j < 3; j++)
             {
-                int numToCheck = Random.Range(0, _groupManager[0].PreyTransform[i].Length);
-                groupPosition += _groupManager[0].PreyTransform[i][numToCheck].position;
+                int numToCheck = Random.Range(0, groupManager.PreyTransform[i].Length);
+                groupPosition += groupManager.PreyTransform[i][numToCheck].position;
             }
             Vector3 groupPositionAverage = groupPosition / 3;
-            _groupManager[0].GroupPosition[i] = groupPositionAverage;
+            groupManager.GroupPosition[i] = groupPositionAverage;
 
         }
     }
-    void GetPreyForEachGroup()
+    void GetPreyForEachGroup(GroupmanagerComponent groupManager)
     {
         for (int i = 0; i < _prey.Length; i++)
         {
             //This monstrosity creates fills the groupmanagers array containing all the prey for each group
-            _groupManager[0].PreyTransform[_prey.GroupComponent[i].ID][_groupManager[0].PreyTransform[_prey.GroupComponent[i].ID].Length - 1] = _prey.Transform[i];
+            groupManager.PreyTransform[_prey.GroupComponent[i].ID][groupManager.PreyTransform[_prey.GroupComponent[i].ID].Length] = _prey.Transform[i];
         }
     }
 }

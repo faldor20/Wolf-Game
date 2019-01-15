@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/* using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
@@ -13,10 +13,6 @@ public class PreyMoveSystem : ComponentSystem
         public ComponentArray<Rigidbody> RigidBody;
         public ComponentArray<SightComponent> SightComponent;
         public ComponentArray<SafenessComponent> SafenessComponent;
-    }
-    struct GroupManager
-    {
-        Vector3 MoveDirection;
     }
 
     [Inject] private Prey _prey;
@@ -74,4 +70,4 @@ public class PreyMoveSystem : ComponentSystem
         Quaternion wanted_rotation = Quaternion.LookRotation(new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z));
         Quaternion.RotateTowards(transform.rotation, wanted_rotation, MaxTurnSpeed * deltaTime);
     }
-}
+} */

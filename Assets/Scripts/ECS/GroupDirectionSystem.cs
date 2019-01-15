@@ -1,4 +1,4 @@
-using System.Collections;
+/* using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
@@ -7,7 +7,7 @@ public class GroupDirectionSystem : ComponentSystem
 
     public ComponentArray<GroupmanagerComponent> GroupManager;
 
-    [Inject] public ComponentArray<GroupComponent> Groups;
+    [Inject] private ComponentArray<GroupComponent> Groups;
     // Update is called once per frame
     protected override void OnUpdate()
     {
@@ -15,5 +15,5 @@ public class GroupDirectionSystem : ComponentSystem
         {
             //  Groupmanager Groups[i].ID
         }
-    }
-}
+    } 
+} */

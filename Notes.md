@@ -65,3 +65,13 @@ They safness update can run a frame before the rest of the ai update cycle.
 [] create a way for prey to be removed from the group managers array of prey
 
 [] Create a prey Spawner
+
+[] impliment min safeness and safeness to move at as a ratio of the total group size
+
+[]impliment turning related to movement speed. so that it is rotation over distance not just rotation over time, that way the woulf actually has to turn around
+
+[] make it so each prey only does one hysics overlap by either combining the information in safness upadter and prey move or storing information between them
+[]figre out how to prevent prey overshooting their target
+perhaps
+[]better simulate behaviour by having the elk eventually bolt close ish to the wolf of the group is getting to far away.
+[]impliment path finding to allow the elk to move around the wolf

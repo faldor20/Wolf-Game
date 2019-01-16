@@ -32,25 +32,23 @@ public class GroupManagerSystem : ComponentSystem
             GetPreyForEachGroup(groupManager);
             preygot = true;
         }
+
+        //in the final result this will just move along in the path defined by group movement and be updated every few seconds to correct
         for (int i = 0; i < groupManager.PreyTransform.Length; i++)
         {
             Vector3 groupPosition = Vector3.zero;
-            for (int j = 0; j < 3; j++)
+            int numberOfPreyInGroup = groupManager.PreyTransform[i].Length;
+            for (int j = 0; j < numberOfPreyInGroup; j++)
             {
-                int numToCheck = Random.Range(0, groupManager.PreyTransform[i].Length);
-                groupPosition += groupManager.PreyTransform[i][numToCheck].position;
+                groupPosition += groupManager.PreyTransform[i][j].position;
             }
-            Vector3 groupPositionAverage = groupPosition / 3;
+            Vector3 groupPositionAverage = groupPosition / numberOfPreyInGroup;
             groupManager.GroupPosition[i] = groupPositionAverage;
 
         }
     }
     void GetPreyForEachGroup(GroupmanagerComponent groupManager)
     {
-        for (int i = 0; i < _prey.Length; i++)
-        {
-            //This monstrosity creates fills the groupmanagers array containing all the prey for each group
-            groupManager.PreyTransform[_prey.GroupComponent[i].ID][groupManager.PreyTransform[_prey.GroupComponent[i].ID].Length] = _prey.Transform[i];
-        }
+
     }
 }

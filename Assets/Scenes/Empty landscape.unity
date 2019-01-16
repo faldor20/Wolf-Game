@@ -409,6 +409,7 @@ MonoBehaviour:
   maxGroupSize: 20
   minGroupSize: 5
   elkPrefab: {fileID: 757419592}
+  groupManagerObject: {fileID: 2106889848}
 --- !u!114 &1534986911
 MonoBehaviour:
   m_ObjectHideFlags: 0

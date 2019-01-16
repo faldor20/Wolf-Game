@@ -14,9 +14,14 @@ public class ElkSpawner : MonoBehaviour
     void Start()
     {
         GroupmanagerComponent groupManager = groupManagerObject.GetComponent<GroupmanagerComponent>();
+        groupManager.PreyTransform = new Transform[numberOfGroups][];
+
         for (int i = 0; i < numberOfGroups; i++)
         {
             int groupSize = Random.Range(minGroupSize, maxGroupSize); //This should really follow a nroaml distribution but for now uitll just be random
+            groupManager.PreyTransform[i] = new Transform[groupSize];
+            groupManager.GroupPosition = new Vector3[groupSize];
+            groupManager.Movedirections = new Vector3[groupSize];
             CreateGroup(groupSize, new Vector3(0, 0, i * 20), i, groupManager);
         }
 
@@ -35,18 +40,13 @@ public class ElkSpawner : MonoBehaviour
                 GroupComponent groupComponent = elk.GetComponent<GroupComponent>();
                 groupComponent.ID = groupID;
 
-                //This monstrosity creates fills the groupmanagers array containing all the prey for each group
-                groupManager.PreyTransform[groupID][groupManager.PreyTransform[groupID].Length - 1] = elk.transform;
+                //This fills the groupmanagers array containing all the prey for each group
+                groupManager.PreyTransform[groupID][spawned] = elk.transform;
+                spawned++;
             }
             if (spawned >= size) break;
         }
 
     }
-    void GetPreyForEachGroup(GroupmanagerComponent groupManager)
-    {
-        for (int i = 0; i < .Length; i++)
-        {
 
-        }
-    }
 }

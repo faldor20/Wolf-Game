@@ -7,6 +7,56 @@ title: Notes on coding work
 ## About ai behaviour
 
 The Prey needs to be able to see. to achive this we can use a collider for its sight, but for amny interactions the prey will need to do somethign relating to the closest enemy or friend or member of the group.
+###Ai State Machine
+States:
+1. grazing
+2. walking
+3. running
+4. retreating back to group
+5. fleeing from wolf
+
+
+How to manage jobs:
+Jobs dont need to be rerun each time
+Coroutines or timers? one or the other.
+jobs can be run the same as in screeps. 
+An operation is assigned then a target, then there are triggers that define reasons the job can exit or change state.
+triggers are checked each and every update
+
+THEY ARE BOIDS
+
+boids implimentation:
+**avoid: avoid other entities within a small radius**
+This means that when and entity is within the radius a vector is drawn from that entity to the boid and the boid attempts to align itslf with that angle
+**align: aling oneslef with entites within a radius**
+The Boid will attempt to align itslef with the average vector direction fo entites within a range.
+**approach: attempt to move close to nearby entities**
+The boid will attempt to move towards other
+
+forces obviously need weights. those weights will be determined mostly by the distance from other units
+
+**Effect on grouping**
+normal boids would have groups intermingle. for me that seems unrealisitice i would rather have my boids stay with their own groups unless they get seperated from the group centery by to much.
+
+Calculation of group center is and interesting factor, becasue 
+
+speed can be altered by an urgency factor. each variable can have an urgency adjustment. 
+if a wolf is near an elk it will move away. low urgency. if an elk is very close to an elk it will sprint away. high urngency.
+same goes for distance from herd
+
+
+
+
+could i optimize it by only having nearby groups exist? all other groups could simply be a list of elk and a grou poistion
+
+Could i make them into particle effects?
+wouldnt that be awesome
+
+#### unity pathfining:
+
+##### How to make prey move around wolf?
+
+
 
 ##Sight
 

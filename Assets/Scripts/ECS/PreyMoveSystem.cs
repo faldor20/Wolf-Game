@@ -1,4 +1,4 @@
-﻿ using System.Collections.Generic;
+﻿/*  using System.Collections.Generic;
  using System.Collections;
  using Unity.Entities;
  using UnityEngine;
@@ -80,4 +80,4 @@
          Quaternion wanted_rotation = Quaternion.LookRotation(new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z));
          Quaternion.RotateTowards(transform.rotation, wanted_rotation, MaxTurnSpeed * deltaTime);
      }
- }
+ } */

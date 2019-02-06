@@ -9,17 +9,17 @@ title: Notes on coding work
 The Prey needs to be able to see. to achive this we can use a collider for its sight, but for amny interactions the prey will need to do somethign relating to the closest enemy or friend or member of the group.
 ###Ai State Machine
 States:
+
 1. grazing
 2. walking
 3. running
 4. retreating back to group
 5. fleeing from wolf
 
-
 How to manage jobs:
 Jobs dont need to be rerun each time
 Coroutines or timers? one or the other.
-jobs can be run the same as in screeps. 
+jobs can be run the same as in screeps.
 An operation is assigned then a target, then there are triggers that define reasons the job can exit or change state.
 triggers are checked each and every update
 
@@ -38,14 +38,21 @@ forces obviously need weights. those weights will be determined mostly by the di
 **Effect on grouping**
 normal boids would have groups intermingle. for me that seems unrealisitice i would rather have my boids stay with their own groups unless they get seperated from the group centery by to much.
 
-Calculation of group center is and interesting factor, becasue 
+Calculation of group center is and interesting factor, becasue
 
-speed can be altered by an urgency factor. each variable can have an urgency adjustment. 
+speed can be altered by an urgency factor. each variable can have an urgency adjustment.
 if a wolf is near an elk it will move away. low urgency. if an elk is very close to an elk it will sprint away. high urngency.
-same goes for distance from herd
+same goes for distance from herd. this could just be calculated by dividing the value of alignment by the number of elk nearby
 
+#### Boids Optimization
 
+boids can be optimized by finding the movement factor that has teh greateset range and then finding the elk within that and using that subest for all the others.(because of paralell for this may actually end up being less performant... wait no i think each elk will be its own job so i cant use parell for ona per elk basis)
 
+we only need to give ach boid a list of boids that re within its own group, we can pass a list of boids soted by group into the loop. alternatively we could allso use physics.overlapsphere
+
+####Understanding the ECS Boids implimentation:
+to reduce the number of components needing to be got per boid the Unity example project iterates over boids grouped by there boid type.
+the example allso passes in the target positions and objects from a list
 
 could i optimize it by only having nearby groups exist? all other groups could simply be a list of elk and a grou poistion
 
@@ -55,8 +62,6 @@ wouldnt that be awesome
 #### unity pathfining:
 
 ##### How to make prey move around wolf?
-
-
 
 ##Sight
 

@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
-public class GroupmanagerComponent : MonoBehaviour
+[Serializable]
+public struct GroupManager : IComponentData
 
 {
     public Vector3[] Movedirections;
@@ -10,3 +12,4 @@ public class GroupmanagerComponent : MonoBehaviour
     public Transform[][] PreyTransform;
     public Vector3 GroupMoveSpeed;
 }
+public class GroupmManagerComponent : ComponentDataWrapper<GroupManager> { }

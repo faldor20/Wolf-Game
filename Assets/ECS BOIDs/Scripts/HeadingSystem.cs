@@ -1,7 +1,7 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -18,7 +18,7 @@ namespace Samples.Common
         {
             public void Execute([ReadOnly] ref Heading heading, ref Rotation rotation)
             {
-                var rotationFromHeading = quaternion.LookRotationSafe(heading.Value, math.up());
+                var rotationFromHeading = quaternion.LookRotationSafe(new float3(heading.Value.x, 0, heading.Value.y), math.up());
                 rotation = new Rotation { Value = rotationFromHeading };
             }
         }

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Eli\.Rider2018.2\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Eli\.Rider2018.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Eli\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_Wolf catching.-1969064214.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Eli\Documents\unity\Wolf catching" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="ColliderController.cs" t="Include" />
+        <e p="ECS BOIDs" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="BoidComponent.cs" t="Include" />
+            <e p="BoidObstacleComponent.cs" t="Include" />
+            <e p="BoidSystem.cs" t="Include" />
+            <e p="BoidTargetComponent.cs" t="Include" />
+            <e p="ByteBool.cs" t="Include" />
+            <e p="HashUtility.cs" t="Include" />
+            <e p="HeadingComponent.cs" t="Include" />
+            <e p="HeadingSystem.cs" t="Include" />
+            <e p="MathUtility.cs" t="Include" />
+            <e p="MoveForwardComponent.cs" t="Include" />
+            <e p="MoveForwardSystem.cs" t="Include" />
+            <e p="MoveSpeedComponent.cs" t="Include" />
+            <e p="MyECSBoids" t="Include">
+              <e p="BoidMoveSystem.cs" t="Include" />
+              <e p="MainBoidComponent.cs" t="Include" />
+            </e>
+            <e p="RandomIInitialHeadingSystem.cs" t="Include" />
+            <e p="RandomInitialHeadingComponent.cs" t="Include" />
+            <e p="RotationSpeedComponent.cs" t="Include" />
+            <e p="RotationSpeedSystem.cs" t="Include" />
+            <e p="SpawnRandomInSphereComponent.cs" t="Include" />
+            <e p="SpawnRandomInSphereSystem.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Editor" t="Include">
+          <e p="SightComponentEditor.cs" t="Include" />
+        </e>
+        <e p="gpu boids examples" t="Include">
+          <e p="1-CPU_Boids" t="Include">
+            <e p="BoidBehaviour.cs" t="Include" />
+            <e p="BoidController.cs" t="Include" />
+            <e p="Perlin.cs" t="Include" />
+            <e p="Shaker.cs" t="Include" />
+            <e p="SimpleRotation.cs" t="Include" />
+            <e p="Tester.cs" t="Include" />
+            <e p="TransformShaker.cs" t="Include" />
+          </e>
+          <e p="2-GPU_Boids_Compute" t="Include">
+            <e p="Boid_Simple.compute" t="Include" />
+            <e p="BoidBehaviour_Test.cs" t="Include" />
+            <e p="GPUFlockCompute.cs" t="Include" />
+          </e>
+          <e p="3-GPU_Boids_Compute_Draw" t="Include">
+            <e p="Boid_Simple.compute" t="Include" />
+            <e p="Boids_Simple.shader" t="Include" />
+            <e p="GPUFlock_Draw.cs" t="Include" />
+          </e>
+          <e p="4-GPU_Boids_Compute_Draw_Multilateration" t="Include">
+            <e p="Boids_Multilateration.compute" t="Include" />
+            <e p="Boids_Multilateration.shader" t="Include" />
+            <e p="GPUFlock_Multilateration.cs" t="Include" />
+          </e>
+          <e p="5-GPU_Boids_Compute_Draw_Bitonic_Sorting" t="Include">
+            <e p="Boids_Bitonic.compute" t="Include" />
+            <e p="Boids_Bitonic.shader" t="Include" />
+            <e p="GPUFlock_Draw_Bitonic.cs" t="Include" />
+          </e>
+          <e p="6-GPU_Boids_Compute_Draw_Skinning" t="Include">
+            <e p="Boid_Skinned.compute" t="Include" />
+            <e p="Boids_Skinned.shader" t="Include" />
+            <e p="GPUFlock_Skinned.cs" t="Include" />
+          </e>
+          <e p="7-GPU_Boids_Compute_Draw_Skinning_Affector" t="Include">
+            <e p="Boid_Skinned_Affector.compute" t="Include" />
+            <e p="Boids_Skinned_Affector.shader" t="Include" />
+            <e p="GPUFlock_Skinned_Affector.cs" t="Include" />
+          </e>
+          <e p="8-GPU_Boids_Final_Clean" t="Include">
+            <e p="Boid.compute" t="Include" />
+            <e p="Boids.shader" t="Include" />
+            <e p="GPUFlock.cs" t="Include" />
+          </e>
+          <e p="Common" t="Include">
+            <e p="dickbutt.txt" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="MeshSaver.cs" t="Include" />
+            </e>
+            <e p="eye.txt" t="Include" />
+            <e p="FlyCamera.cs" t="Include" />
+            <e p="heart.txt" t="Include" />
+            <e p="PathFromPoints.cs" t="Include" />
+            <e p="SH Skybox.shader" t="Include" />
+            <e p="skull.txt" t="Include" />
+            <e p="unity.txt" t="Include" />
+            <e p="upvote.txt" t="Include" />
+          </e>
+          <e p="GPU_Swarm" t="Include">
+            <e p="DFVolume" t="Include">
+              <e p="Editor" t="Include">
+                <e p="VolumeDataEditor.cs" t="Include" />
+                <e p="VolumeSamplerEditor.cs" t="Include" />
+                <e p="VolumeVisualizer.cs" t="Include" />
+              </e>
+              <e p="Shader" t="Include">
+                <e p="Visualizer.shader" t="Include" />
+              </e>
+              <e p="VolumeData.cs" t="Include" />
+              <e p="VolumeSampler.cs" t="Include" />
+              <e p="VolumeVisualizer.cs" t="Include" />
+            </e>
+            <e p="Klak" t="Include">
+              <e p="Chromatics" t="Include">
+                <e p="CosineGradient.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="CosineGradientEditor.cs" t="Include" />
+                  <e p="Preview.shader" t="Include" />
+                </e>
+              </e>
+              <e p="Math" t="Include">
+                <e p="Perlin.cs" t="Include" />
+              </e>
+              <e p="Motion" t="Include">
+                <e p="BrownianMotion.cs" t="Include" />
+                <e p="ConstantMotion.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="BrownianMotionEditor.cs" t="Include" />
+                  <e p="ConstantMotionEditor.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="Swarm" t="Include">
+              <e p="CrawlingSwarm.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="CrawlingSwarmEditor.cs" t="Include" />
+                <e p="FloatingSwarmEditor.cs" t="Include" />
+                <e p="SwirlingSwarmEditor.cs" t="Include" />
+                <e p="TubeTemplateEditor.cs" t="Include" />
+              </e>
+              <e p="FloatingSwarm.cs" t="Include" />
+              <e p="Shader" t="Include">
+                <e p="CrawlingSwarm.compute" t="Include" />
+                <e p="FloatingSwarm.compute" t="Include" />
+                <e p="SimplexNoise3D.cginc" t="Include" />
+                <e p="SwirlingSwarm.compute" t="Include" />
+                <e p="Tube.shader" t="Include" />
+              </e>
+              <e p="SwirlingSwarm.cs" t="Include" />
+              <e p="TubeTemplate.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="MassController.cs" t="Include" />
+        <e p="MouseController.cs" t="Include" />
+        <e p="mousefollow.cs" t="Include" />
+        <e p="NewBehaviourScript.cs" t="Include" />
+        <e p="RaycastView.cs" t="Include" />
+        <e p="Scripts" t="Include">
+          <e p="ECS" t="Include">
+            <e p="Components.cs" t="Include" />
+            <e p="GroupComponent.cs" t="Include" />
+            <e p="GroupDirectionSystem.cs" t="Include" />
+            <e p="GroupManagerComponent.cs" t="Include" />
+            <e p="GroupManagerSystem.cs" t="Include" />
+            <e p="GroupSystem.cs" t="Include" />
+            <e p="InputComponent.cs" t="Include" />
+            <e p="InputSystem.cs" t="Include" />
+            <e p="MemberOfGroupComponent.cs" t="Include" />
+            <e p="MoveComponent.cs" t="Include" />
+            <e p="PlayerMovementSystem.cs" t="Include" />
+            <e p="PreyMoveSystem.cs" t="Include" />
+            <e p="SafenessComponent.cs" t="Include" />
+            <e p="SafenessUpdaterSystem.cs" t="Include" />
+            <e p="SightComponent.cs" t="Include" />
+          </e>
+          <e p="ElkSpawner.cs" t="Include" />
+          <e p="Normal" t="Include">
+            <e p="PlayerController.cs" t="Include" />
+          </e>
+          <e p="StartUp.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Library" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Samples.Boids.csproj" t="IncludeRecursive" />
+      <e p="Temp" t="ExcludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+      </e>
+      <e p="Wolf catching.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>

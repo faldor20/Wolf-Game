@@ -1,15 +1,14 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Burst;
 using Unity.Jobs;
+using Unity.Mathematics;
 
 namespace Samples.Common
 {
     [DisableAutoCreation]
     [UpdateAfter(typeof(RandomInitialHeadingSystem))]
-    public class RandomInitialHeadingBarrier : BarrierSystem
-    { }
+    public class RandomInitialHeadingBarrier : BarrierSystem { }
 
     public class RandomInitialHeadingSystem : JobComponentSystem
     {
@@ -29,7 +28,7 @@ namespace Samples.Common
             {
                 heading = new Heading
                 {
-                    Value = Random.NextFloat3Direction()
+                    Value = Random.NextFloat2Direction()
                 };
 
                 Commands.RemoveComponent<RandomInitialHeading>(index, entity);

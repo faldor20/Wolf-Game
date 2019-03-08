@@ -56,7 +56,7 @@ public class BoidMoveSystem : JobComponentSystem
                 float2 result = float2.zero;
                 foreach (var boidIndex in boidsForActions)
                 {
-                    SpecificAction(currentPosition, boidPositions[boidIndex].Value.ToFloat2(), result);
+                   result= SpecificAction(currentPosition, boidPositions[boidIndex].Value.ToFloat2(), result);
                 }
                 //TODO: check if normalizing this is actually necissary
                 return result = math.normalizesafe(result / boidsForActions.Count) * weight;
@@ -66,7 +66,7 @@ public class BoidMoveSystem : JobComponentSystem
                 float2 result = float2.zero;
                 foreach (var boidIndex in boidsForActions)
                 {
-                    SpecificAction(currentPosition, boidHeadings[boidIndex].Value, result);
+                  result=  SpecificAction(currentPosition, boidHeadings[boidIndex].Value, result);
                 }
                 //TODO: check if normalizing this is actually necissary
                 return result = math.normalizesafe(result / boidsForActions.Count) * weight;
@@ -96,7 +96,7 @@ public class BoidMoveSystem : JobComponentSystem
 
         class AlignmentAction : BoidActionFunc
         {
-            public AlignmentAction() { ActionID = BoidActionType.Cohesion; }
+            public AlignmentAction() { ActionID = BoidActionType.Alignment; }
 
             public override float2 SpecificAction(float2 currentPos, float2 boidPos, float2 previousresult)
             {
@@ -117,7 +117,7 @@ public class BoidMoveSystem : JobComponentSystem
 
         public void Execute([ReadOnly] ref Position position, ref Heading heading)
         {
-            BoidActionFunc[] boidActionFunctions = new BoidActionFunc[] { new SeperationAction(), new CohesionAction() };
+            BoidActionFunc[] boidActionFunctions = { new SeperationAction(), new CohesionAction(), new AlignmentAction() };
             int thisBoidIndex = boidIndexs[position.Value];
             float2 forward = heading.Value;
             float2 currentPosition = position.Value.ToFloat2();
@@ -125,7 +125,7 @@ public class BoidMoveSystem : JobComponentSystem
             //This is a list of all boids needing to be checked for each action
             List<int>[] boidsForActions = CheckBoidCollision2D(currentPosition, forward, boidPositions, orderedBoidActions);
             float2 headingChanges;
-            //Here we do all the actions that this boid does iterating ober each action in the list and running a function asociated with its actionType enum.
+            //Here we do all the actions that this boid does iterating over each action in the list and running a function asociated with its actionType enum.
             float2[] boidActionResults = new float2[orderedBoidActions.Length + orderedNonBoidActions.Length];
             for (int i = 0; i < orderedBoidActions.Length; i++)
             {
@@ -133,9 +133,16 @@ public class BoidMoveSystem : JobComponentSystem
                 {
                     if (orderedBoidActions[i].actionType == boidAction.ActionID)
                     {
-                        if (boidAction.ActionID == BoidActionType.Alignment) { boidActionResults[i] = boidAction.DoAction(boidsForActions[i], currentPosition, boidHeadings, orderedBoidActions[i].weight); }
-                        else { boidActionResults[i] = boidAction.DoAction(boidsForActions[i], currentPosition, boidPositions, orderedBoidActions[i].weight); }
+                        if (boidAction.ActionID == BoidActionType.Alignment)
+                        {
+                            boidActionResults[i] = boidAction.DoAction(boidsForActions[i], currentPosition, boidHeadings, orderedBoidActions[i].weight);
+                        }
+                        else
+                        {
+                            boidActionResults[i] = boidAction.DoAction(boidsForActions[i], currentPosition, boidPositions, orderedBoidActions[i].weight);
+                        }
                         continue;
+
                     }
                 }
 
@@ -207,6 +214,8 @@ public class BoidMoveSystem : JobComponentSystem
 
             heading = new Heading { Value = nextHeading };
         }
+        
+        
         public List<int>[] CheckBoidCollision2D(float2 centerPosition, float2 heading, NativeArray<Position> BoidPositions, NativeArray<BoidAction> orderedActions)
         {
             List<int>[] nearbyBoidIndexsForEachAction = new List<int>[orderedActions.Length];

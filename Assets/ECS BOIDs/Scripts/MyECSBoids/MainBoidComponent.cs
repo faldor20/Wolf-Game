@@ -10,7 +10,7 @@ public struct MainBoid : ISharedComponentData
     public NonBoidAction[] nonBoidActions;
     public int group;
 
-    public float3 heading;
+
 }
 
 public class MainBoidComponent : SharedComponentDataWrapper<MainBoid> { }

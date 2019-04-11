@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public class MemberOfGroupComponent : IComponentData
+public struct MemberOfGroup : IComponentData
 
 {
     public Entity Group;
 }
-public class MemberOfGroupComponent : ComponentDataProxy<MemberOfGroupComponent> { }
+public class MemberOfGroupComponent : ComponentDataProxy<MemberOfGroup> { }

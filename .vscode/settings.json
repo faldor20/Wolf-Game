@@ -52,5 +52,10 @@
         "ProjectSettings/":true,
         "temp/":true,
         "Temp/":true
+    },
+    "files.watcherExclude": {
+        "**/.history/**": true,
+        "**/BackupOfUnityecs/**": true,
+        "**/GalacticConquest/**": true
     }
 }

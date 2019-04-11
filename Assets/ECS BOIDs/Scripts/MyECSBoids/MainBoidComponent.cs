@@ -6,8 +6,8 @@ using Unity.Mathematics;
 public struct MainBoid : ISharedComponentData
 {
 
-    public NativeArray<BoidAction> boidActions;
-    public NativeArray<NonBoidAction> nonBoidActions;
+    public BoidAction[] boidActions;
+    public NonBoidAction[] nonBoidActions;
     public int group;
 
 }

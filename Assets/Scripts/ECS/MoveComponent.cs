@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
-public class MoveComponent : MonoBehaviour
+public struct Move : IComponentData
 {
-    public float TurnSpeed=2;
-    public float MoveSpeed=2000;
+    public float TurnSpeed;
+    public float MoveSpeed;
 }
+public class MoveComponent : ComponentDataProxy<Move> { }

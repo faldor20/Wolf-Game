@@ -12,4 +12,4 @@ public struct Boid : ISharedComponentData
     public float group;
 }
 
-public class BoidComponent : SharedComponentDataWrapper<Boid> { }
+public class BoidComponent : SharedComponentDataProxy<Boid> { }

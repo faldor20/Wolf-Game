@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6210029755572092770}
   - component: {fileID: 8313722608928244532}
   - component: {fileID: 9141298188488722662}
+  - component: {fileID: 5568995534615697208}
   m_Layer: 0
   m_Name: Boid
   m_TagString: Untagged
@@ -118,16 +119,16 @@ MonoBehaviour:
   m_SerializedData:
     boidActions:
     - actionType: 0
-      range: 2
+      range: 8
       weight: 2
       viewangle: 0
     - actionType: 1
-      range: 3
+      range: 10
       weight: 1
       viewangle: 0
     - actionType: 2
-      range: 3
-      weight: 3
+      range: 0.6
+      weight: 5
       viewangle: 0
     nonBoidActions: []
     group: 0
@@ -201,3 +202,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedData:
     speed: 1.09
+--- !u!114 &5568995534615697208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210029755572092771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 6cd107125761b5946977e6d0356c3a89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedData:
+    min: 0
+    max: 0
+    changeSpeed: 0
+    varianceWhileMoving: 0

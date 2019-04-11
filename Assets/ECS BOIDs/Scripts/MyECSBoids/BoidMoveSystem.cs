@@ -8,14 +8,13 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-
 public class BoidMoveSystem : JobComponentSystem
 {
 
-    private ComponentGroup m_BoidGroup;
-    private ComponentGroup m_TargetGroup;
-    private ComponentGroup m_ObstacleGroup;
-    private ComponentGroup m_GoupManager;
+    private EntityQuery m_BoidGroup;
+    private EntityQuery m_TargetGroup;
+    private EntityQuery m_ObstacleGroup;
+    private EntityQuery m_GoupManager;
 
     private List<MainBoid> m_UniqueTypes = new List<MainBoid>(10);
     private List<PrevCells> m_PrevCells = new List<PrevCells>();
@@ -24,39 +23,39 @@ public class BoidMoveSystem : JobComponentSystem
     {
         public NativeHashMap<float3, int> hashMap;
 
-        public NativeArray<Position> copyTargetPositions;
-        public NativeArray<Position> copyObstaclePositions;
+        public NativeArray<Translation> copyTargetPositions;
+        public NativeArray<Translation> copyObstaclePositions;
 
         public NativeArray<Heading> boidHeadings;
-        public NativeArray<Position> boidPositions;
+        public NativeArray<Translation> boidPositions;
 
         public NativeArray<BoidAction> orderedBoidActions;
         public NativeArray<NonBoidAction> orderedNonBoidActions;
     }
 
     [RequireComponentTag(typeof(MainBoid))]
-    struct HashPositions : IJobProcessComponentDataWithEntity<Position>
+    struct HashPositions : IJobForEachWithEntity<Translation>
     {
         [WriteOnly] public NativeHashMap<float3, int>.Concurrent hashMap;
 
-        public void Execute(Entity entity, int index, [ReadOnly] ref Position position)
+        public void Execute(Entity entity, int index, [ReadOnly] ref Translation position)
         {
             hashMap.TryAdd(position.Value, index);
         }
     }
 
     [RequireComponentTag(typeof(MainBoid))]
-    struct Steer : IJobProcessComponentData<Position, Heading>
+    struct Steer : IJobForEach<Translation, Heading>
     {
         abstract class BoidActionFunc
         {
             public BoidActionType ActionID;
-            public float2 DoAction(List<int> boidsForActions, float2 currentPosition, NativeArray<Position> boidPositions, float weight)
+            public float2 DoAction(List<int> boidsForActions, float2 currentPosition, NativeArray<Translation> boidPositions, float weight)
             {
                 float2 result = float2.zero;
                 foreach (var boidIndex in boidsForActions)
                 {
-                   result= SpecificAction(currentPosition, boidPositions[boidIndex].Value.ToFloat2(), result);
+                    result = SpecificAction(currentPosition, boidPositions[boidIndex].Value.ToFloat2(), result);
                 }
                 //TODO: check if normalizing this is actually necissary
                 return result = math.normalizesafe(result / boidsForActions.Count) * weight;
@@ -66,7 +65,7 @@ public class BoidMoveSystem : JobComponentSystem
                 float2 result = float2.zero;
                 foreach (var boidIndex in boidsForActions)
                 {
-                  result=  SpecificAction(currentPosition, boidHeadings[boidIndex].Value, result);
+                    result = SpecificAction(currentPosition, boidHeadings[boidIndex].Value, result);
                 }
                 //TODO: check if normalizing this is actually necissary
                 return result = math.normalizesafe(result / boidsForActions.Count) * weight;
@@ -107,15 +106,15 @@ public class BoidMoveSystem : JobComponentSystem
         //[ReadOnly] public MainBoid boidConfig;
         [ReadOnly] public NativeArray<BoidAction> orderedBoidActions;
         [ReadOnly] public NativeArray<NonBoidAction> orderedNonBoidActions;
-        [ReadOnly] public NativeArray<Position> targetPositions;
-        [ReadOnly] public NativeArray<Position> obstaclePositions;
-        [ReadOnly] public NativeArray<Position> boidPositions;
+        [ReadOnly] public NativeArray<Translation> targetPositions;
+        [ReadOnly] public NativeArray<Translation> obstaclePositions;
+        [ReadOnly] public NativeArray<Translation> boidPositions;
         [ReadOnly] public NativeArray<Heading> boidHeadings;
         [ReadOnly] public NativeHashMap<float3, int> boidIndexs;
         // [ReadOnly] public BoidActionFunc[] boidActionFunctions;
         public float dt;
 
-        public void Execute([ReadOnly] ref Position position, ref Heading heading)
+        public void Execute([ReadOnly] ref Translation position, ref Heading heading)
         {
             BoidActionFunc[] boidActionFunctions = { new SeperationAction(), new CohesionAction(), new AlignmentAction() };
             int thisBoidIndex = boidIndexs[position.Value];
@@ -124,6 +123,7 @@ public class BoidMoveSystem : JobComponentSystem
 
             //This is a list of all boids needing to be checked for each action
             List<int>[] boidsForActions = CheckBoidCollision2D(currentPosition, forward, boidPositions, orderedBoidActions);
+
             float2 headingChanges;
             //Here we do all the actions that this boid does iterating over each action in the list and running a function asociated with its actionType enum.
             float2[] boidActionResults = new float2[orderedBoidActions.Length + orderedNonBoidActions.Length];
@@ -185,7 +185,7 @@ public class BoidMoveSystem : JobComponentSystem
                 {
 
                     float2 fleeingResult = float2.zero;
-                    foreach (var obstaclePosition in obstaclePositions)
+                    foreach (Translation obstaclePosition in obstaclePositions)
                     {
                         float2 obstaclePos = obstaclePosition.Value.ToFloat2();
                         fleeingResult += math.normalizesafe(currentPosition - obstaclePos) * (1 / math.distance(currentPosition, obstaclePos));
@@ -196,7 +196,7 @@ public class BoidMoveSystem : JobComponentSystem
                 {
 
                     float2 targetingResult = float2.zero;
-                    foreach (var obstaclePosition in obstaclePositions)
+                    foreach (Translation obstaclePosition in obstaclePositions)
                     {
                         float2 obstaclePos = obstaclePosition.Value.ToFloat2();
                         targetingResult += math.normalizesafe(obstaclePos - currentPosition) * (1 / math.distance(currentPosition, obstaclePos));
@@ -214,9 +214,8 @@ public class BoidMoveSystem : JobComponentSystem
 
             heading = new Heading { Value = nextHeading };
         }
-        
-        
-        public List<int>[] CheckBoidCollision2D(float2 centerPosition, float2 heading, NativeArray<Position> BoidPositions, NativeArray<BoidAction> orderedActions)
+
+        public List<int>[] CheckBoidCollision2D(float2 centerPosition, float2 heading, NativeArray<Translation> BoidPositions, NativeArray<BoidAction> orderedActions)
         {
             List<int>[] nearbyBoidIndexsForEachAction = new List<int>[orderedActions.Length];
             for (int i = 0; i < nearbyBoidIndexsForEachAction.Length; i++)
@@ -285,6 +284,23 @@ public class BoidMoveSystem : JobComponentSystem
         }
         m_PrevCells.Clear();
     }
+    void OnDisable()
+    {
+        for (int i = 0; i < m_PrevCells.Count; i++)
+        {
+            m_PrevCells[i].hashMap.Dispose();
+
+            m_PrevCells[i].copyTargetPositions.Dispose();
+            m_PrevCells[i].copyObstaclePositions.Dispose();
+
+            m_PrevCells[i].boidHeadings.Dispose();
+            m_PrevCells[i].boidPositions.Dispose();
+
+            m_PrevCells[i].orderedBoidActions.Dispose();
+            m_PrevCells[i].orderedNonBoidActions.Dispose();
+        }
+        m_PrevCells.Clear();
+    }
     public class BoidActionSort : IComparer<BoidAction>
     {
         public int Compare(BoidAction a, BoidAction b)
@@ -321,17 +337,18 @@ public class BoidMoveSystem : JobComponentSystem
             int boidCount = m_BoidGroup.CalculateLength();
             //some of this can be cached from last time to reduce component data calls.
             int cacheIndex = typeIndex - 1;
-            NativeArray<JobHandle> initializationJobHandles = new NativeArray<JobHandle>(5, Allocator.Temp);
+            //this was causing an undisposed allocation error
+            //NativeArray<JobHandle> initializationJobHandles = new NativeArray<JobHandle>(5, Allocator.Temp);
 
             NativeArray<Heading> boidHeadings = m_BoidGroup.ToComponentDataArray<Heading>(Allocator.TempJob, out JobHandle initialCellAlignmentJobHandle);
             //TODO: make this into a 2d array so that the 2d positions doesnt have to be calculated all the time.
-            NativeArray<Position> boidPositions = m_BoidGroup.ToComponentDataArray<Position>(Allocator.TempJob, out JobHandle initialCellSeparationJobHandle);
-            NativeArray<Position> copyTargetPositions = m_TargetGroup.ToComponentDataArray<Position>(Allocator.TempJob, out JobHandle copyTargetPositionsJobHandle);
-            NativeArray<Position> copyObstaclePositions = m_ObstacleGroup.ToComponentDataArray<Position>(Allocator.TempJob, out JobHandle copyObstaclePositionsJobHandle);
-            initializationJobHandles[0] = initialCellAlignmentJobHandle;
-            initializationJobHandles[1] = initialCellSeparationJobHandle;
-            initializationJobHandles[2] = copyTargetPositionsJobHandle;
-            initializationJobHandles[3] = copyObstaclePositionsJobHandle;
+            NativeArray<Translation> boidPositions = m_BoidGroup.ToComponentDataArray<Translation>(Allocator.TempJob, out JobHandle initialCellSeparationJobHandle);
+            NativeArray<Translation> copyTargetPositions = m_TargetGroup.ToComponentDataArray<Translation>(Allocator.TempJob, out JobHandle copyTargetPositionsJobHandle);
+            NativeArray<Translation> copyObstaclePositions = m_ObstacleGroup.ToComponentDataArray<Translation>(Allocator.TempJob, out JobHandle copyObstaclePositionsJobHandle);
+            //  initializationJobHandles[0] = initialCellAlignmentJobHandle;
+            //    initializationJobHandles[1] = initialCellSeparationJobHandle;
+            //   initializationJobHandles[2] = copyTargetPositionsJobHandle;
+            //    initializationJobHandles[3] = copyObstaclePositionsJobHandle;
 
             NativeArray<BoidAction> orderedBoidActions = new NativeArray<BoidAction>(uniqueBoidConfig.boidActions.Length, Allocator.TempJob);
             orderedBoidActions.CopyFrom(uniqueBoidConfig.boidActions);
@@ -348,9 +365,9 @@ public class BoidMoveSystem : JobComponentSystem
             {
                 hashMap = hashMap.ToConcurrent()
             };
-            var hashPositionsJobHandle = hashPositionsJob.ScheduleGroup(m_BoidGroup, inputDeps);
+            var hashPositionsJobHandle = hashPositionsJob.Schedule(m_BoidGroup, inputDeps);
 
-            initializationJobHandles[4] = hashPositionsJobHandle;
+            //  initializationJobHandles[4] = hashPositionsJobHandle;
 
             var nextCells = new PrevCells
             {
@@ -385,8 +402,8 @@ public class BoidMoveSystem : JobComponentSystem
             }
             m_PrevCells[cacheIndex] = nextCells;
 
-            JobHandle initialCellBarrierJobHandle = JobHandle.CombineDependencies(initialCellAlignmentJobHandle, initialCellSeparationJobHandle);
-            JobHandle copyTargetObstacleBarrierJobHandle = JobHandle.CombineDependencies(initializationJobHandles);
+            JobHandle initialCellBarrierJobHandle = JobHandle.CombineDependencies(initialCellAlignmentJobHandle, initialCellSeparationJobHandle, copyTargetPositionsJobHandle);
+            JobHandle copyTargetObstacleBarrierJobHandle = JobHandle.CombineDependencies(initialCellBarrierJobHandle, copyObstaclePositionsJobHandle, hashPositionsJobHandle);
 
             Steer steerJob = new Steer
             {
@@ -401,7 +418,7 @@ public class BoidMoveSystem : JobComponentSystem
                 obstaclePositions = copyObstaclePositions,
                 dt = Time.deltaTime
             };
-            JobHandle steerJobHandle = steerJob.ScheduleGroup(m_BoidGroup, copyTargetObstacleBarrierJobHandle);
+            JobHandle steerJobHandle = steerJob.Schedule(m_BoidGroup, copyTargetObstacleBarrierJobHandle);
 
             inputDeps = steerJobHandle;
             m_BoidGroup.AddDependency(inputDeps);
@@ -413,16 +430,16 @@ public class BoidMoveSystem : JobComponentSystem
 
     protected override void OnCreateManager()
     {
-        m_BoidGroup = GetComponentGroup(
+        m_BoidGroup = GetEntityQuery(
             ComponentType.ReadOnly(typeof(MainBoid)),
-            ComponentType.ReadOnly(typeof(Position)),
+            ComponentType.ReadOnly(typeof(Translation)),
             typeof(Heading));
-        m_TargetGroup = GetComponentGroup(
+        m_TargetGroup = GetEntityQuery(
             ComponentType.ReadOnly(typeof(BoidTarget)),
-            ComponentType.ReadOnly(typeof(Position)));
-        m_ObstacleGroup = GetComponentGroup(
+            ComponentType.ReadOnly(typeof(Translation)));
+        m_ObstacleGroup = GetEntityQuery(
             ComponentType.ReadOnly(typeof(BoidObstacle)),
-            ComponentType.ReadOnly(typeof(Position)));
+            ComponentType.ReadOnly(typeof(Translation)));
 
     }
 

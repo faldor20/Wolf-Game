@@ -5,4 +5,4 @@ using Unity.Entities;
 public struct RandomInitialHeading : IComponentData { }
 
 [UnityEngine.DisallowMultipleComponent]
-public class RandomInitialHeadingComponent : ComponentDataWrapper<RandomInitialHeading> { }
+public class RandomInitialHeadingComponent : ComponentDataProxy<RandomInitialHeading> { }

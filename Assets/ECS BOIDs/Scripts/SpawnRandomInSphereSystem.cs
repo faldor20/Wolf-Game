@@ -15,11 +15,11 @@ namespace Samples.Common
             public float3 position;
         }
 
-        ComponentGroup m_MainGroup;
+        EntityQuery m_MainGroup;
 
         protected override void OnCreateManager()
         {
-            m_MainGroup = GetComponentGroup(typeof(SpawnRandomInSphere), typeof(Position));
+            m_MainGroup = GetEntityQuery(typeof(SpawnRandomInSphere), typeof(Translation));
         }
 
         protected override void OnUpdate()
@@ -50,9 +50,9 @@ namespace Samples.Common
 
                     if (m_MainGroup.CalculateLength() == 0)
                         continue;
- 
+
                     var entities = m_MainGroup.ToEntityArray(Allocator.TempJob);
-                    var positions = m_MainGroup.ToComponentDataArray<Position>(Allocator.TempJob);
+                    var positions = m_MainGroup.ToComponentDataArray<Translation>(Allocator.TempJob);
 
                     for (int entityIndex = 0; entityIndex < entities.Length; entityIndex++)
                     {
@@ -76,24 +76,24 @@ namespace Samples.Common
                 int spawnerIndex = spawnInstances[spawnIndex].spawnerIndex;
                 var spawner = uniqueTypes[spawnerIndex];
                 int count = spawner.count;
-                var entities = new NativeArray<Entity>(count,Allocator.Temp);
+                var entities = new NativeArray<Entity>(count, Allocator.Temp);
                 var prefab = spawner.prefab;
                 float radius = spawner.radius;
                 var spawnPositions = new NativeArray<float3>(count, Allocator.Temp);
                 float3 center = spawnInstances[spawnIndex].position;
                 var sourceEntity = spawnInstances[spawnIndex].sourceEntity;
 
-                GeneratePoints.RandomPointsInSphere(center,radius,ref spawnPositions);
+                GeneratePoints.RandomPointsInSphere(center, radius, ref spawnPositions);
 
                 EntityManager.Instantiate(prefab, entities);
 
                 for (int i = 0; i < count; i++)
                 {
-                    var position = new Position
+                    Translation position = new Translation
                     {
                         Value = spawnPositions[i]
                     };
-                    EntityManager.SetComponentData(entities[i],position);
+                    EntityManager.SetComponentData(entities[i], position);
                 }
 
                 EntityManager.RemoveComponent<SpawnRandomInSphere>(sourceEntity);

@@ -12,4 +12,4 @@ public struct MoveSpeed : IComponentData
 }
 
 [UnityEngine.DisallowMultipleComponent]
-public class MoveSpeedComponent : ComponentDataWrapper<MoveSpeed> { }
+public class MoveSpeedComponent : ComponentDataProxy<MoveSpeed> { }

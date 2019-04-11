@@ -5,4 +5,4 @@ using Unity.Entities;
 public struct BoidTarget : IComponentData { }
 
 [UnityEngine.DisallowMultipleComponent]
-public class BoidTargetComponent : ComponentDataWrapper<BoidTarget> { }
+public class BoidTargetComponent : ComponentDataProxy<BoidTarget> { }

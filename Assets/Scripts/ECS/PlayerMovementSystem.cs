@@ -1,44 +1,58 @@
-using System.Collections;
+/* using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
+using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
-public class PlayerMovementSystem : ComponentSystem
-{
-    struct Players //This essentially filters the entities and returns only those containing this list of components
-    {
-        public readonly int Length;
-        public ComponentArray<Transform> Transform;
-        public ComponentArray<Rigidbody> RigidBody;
-        public ComponentArray<MoveComponent> MoveComponent;
-        public ComponentArray<InputComponent> InputComponents;
-    }
 
-    [Inject] private Players _players;
-    protected override void OnUpdate()
+public class PlayerMovementSystem : JobComponentSystem
+{
+
+    private EntityQuery m_players;
+    [BurstCompile]
+    struct PlayerMovementJob : IJobForEach<Rotation, ECSPhysics, Move, InputHandler>
     {
-        float deltaTime = Time.deltaTime;
-        for (int i = 0; i < _players.Length; i++)
+        public float deltaTime;
+        public void Execute([ReadOnly] ref Rotation rotation, ref ECSPhysics physics, [ReadOnly] ref Move moveComponent, [ReadOnly] ref InputHandler inputComponent)
         {
-            Vector3 input = new Vector3(_players.InputComponents[i].Horizontal, 0, _players.InputComponents[i].Vertical);
+            Vector3 input = new float3(inputComponent.Horizontal, 0, inputComponent.Vertical);
             Move(
                 input,
-                _players.RigidBody[i],
-                _players.Transform[i],
+                physics,
+                rotation,
                 deltaTime,
-                _players.MoveComponent[i].TurnSpeed,
-                _players.MoveComponent[i].MoveSpeed
+                moveComponent.TurnSpeed,
+                moveComponent.MoveSpeed
             );
         }
     }
-    void Move(Vector3 direction, Rigidbody m_Rigidbody, Transform transform, float deltaTime, float MaxTurnSpeed, float MoveSpeed)
+    //[Inject] private Players _players;
+    protected override JobHandle OnUpdate(JobHandle inputDependancy)
+    {
+        var job = new PlayerMovementJob()
+        {
+            deltaTime = Time.deltaTime
+        };
+        return job.Schedule(this, inputDependancy);
+
+    }
+    void Move(float3 direction, ECSPhysics physics, Rotation rotation, float deltaTime, float MaxTurnSpeed, float MoveSpeed)
     {
 
-        m_Rigidbody.AddForce((direction * MoveSpeed) * deltaTime);
-        if (m_Rigidbody.velocity.magnitude > 0.01f)
+        physics.velocity += ((direction * MoveSpeed) * deltaTime);
+        if (magnitude(physics.velocity) > 0.01f)
         {
-            m_Rigidbody.MoveRotation(Quaternion.LookRotation(new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z)));
+            // physics.MoveRotation(Quaternion.LookRotation(new Vector3(physics.velocity.x, 0, physics.velocity.z)));
         }
-        Quaternion wanted_rotation = Quaternion.LookRotation(new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z));
-        Quaternion.RotateTowards(transform.rotation, wanted_rotation, MaxTurnSpeed * deltaTime);
+        Quaternion wanted_rotation = Quaternion.LookRotation(new Vector3(physics.velocity.x, 0, physics.velocity.z));
+        Quaternion.RotateTowards(rotation.Value, wanted_rotation, MaxTurnSpeed * deltaTime);
     }
-}
+    float magnitude(float3 vec)
+    {
+        var outVec = math.sqrt(math.pow(vec.x, 2) + math.pow(vec.z, 2) + math.pow(vec.y, 2));
+        return outVec;
+    }
+} */

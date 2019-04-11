@@ -19,7 +19,7 @@ namespace Samples.Common
 
         protected override void OnCreateManager()
         {
-            m_MainGroup = GetComponentGroup(typeof(SpawnRandomInSphere), typeof(Position));
+            m_MainGroup = GetEntityQuery(typeof(SpawnRandomInSphere), typeof(Position));
         }
 
         protected override void OnUpdate()
@@ -50,7 +50,7 @@ namespace Samples.Common
 
                     if (m_MainGroup.CalculateLength() == 0)
                         continue;
- 
+
                     var entities = m_MainGroup.ToEntityArray(Allocator.TempJob);
                     var positions = m_MainGroup.ToComponentDataArray<Position>(Allocator.TempJob);
 
@@ -76,14 +76,14 @@ namespace Samples.Common
                 int spawnerIndex = spawnInstances[spawnIndex].spawnerIndex;
                 var spawner = uniqueTypes[spawnerIndex];
                 int count = spawner.count;
-                var entities = new NativeArray<Entity>(count,Allocator.Temp);
+                var entities = new NativeArray<Entity>(count, Allocator.Temp);
                 var prefab = spawner.prefab;
                 float radius = spawner.radius;
                 var spawnPositions = new NativeArray<float3>(count, Allocator.Temp);
                 float3 center = spawnInstances[spawnIndex].position;
                 var sourceEntity = spawnInstances[spawnIndex].sourceEntity;
 
-                GeneratePoints.RandomPointsInSphere(center,radius,ref spawnPositions);
+                GeneratePoints.RandomPointsInSphere(center, radius, ref spawnPositions);
 
                 EntityManager.Instantiate(prefab, entities);
 
@@ -93,7 +93,7 @@ namespace Samples.Common
                     {
                         Value = spawnPositions[i]
                     };
-                    EntityManager.SetComponentData(entities[i],position);
+                    EntityManager.SetComponentData(entities[i], position);
                 }
 
                 EntityManager.RemoveComponent<SpawnRandomInSphere>(sourceEntity);

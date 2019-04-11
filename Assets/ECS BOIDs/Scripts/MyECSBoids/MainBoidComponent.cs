@@ -6,14 +6,13 @@ using Unity.Mathematics;
 public struct MainBoid : ISharedComponentData
 {
 
-    public BoidAction[] boidActions;
-    public NonBoidAction[] nonBoidActions;
+    public NativeArray<BoidAction> boidActions;
+    public NativeArray<NonBoidAction> nonBoidActions;
     public int group;
-
 
 }
 
-public class MainBoidComponent : SharedComponentDataWrapper<MainBoid> { }
+public class MainBoidComponent : SharedComponentDataProxy<MainBoid> { }
 
 [Serializable]
 public struct BoidAction
@@ -21,7 +20,7 @@ public struct BoidAction
     public BoidActionType actionType;
     public float range;
     public float weight;
-    public ByteBool divideByNearby;
+    public bool divideByNearby;
     public float viewangle;
 }
 
@@ -31,7 +30,7 @@ public struct NonBoidAction
     public NonBoidActionType actionType;
     public float range;
     public float weight;
-    public ByteBool divideByNearby;
+    public bool divideByNearby;
     public float viewangle;
 }
 //Actions which involve checking other boids

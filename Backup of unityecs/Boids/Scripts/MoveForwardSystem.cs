@@ -1,7 +1,7 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -11,10 +11,10 @@ namespace Samples.Common
     public class MoveForwardSystem : JobComponentSystem
     {
         [BurstCompile]
-        struct MoveForwardRotation : IJobProcessComponentData<Position, Rotation, MoveSpeed>
+        struct MoveForwardRotation : IJobForEach<Position, Rotation, MoveSpeed>
         {
             public float dt;
-        
+
             public void Execute(ref Position position, [ReadOnly] ref Rotation rotation, [ReadOnly] ref MoveSpeed speed)
             {
                 position = new Position
@@ -23,7 +23,7 @@ namespace Samples.Common
                 };
             }
         }
-    
+
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var moveForwardRotationJob = new MoveForwardRotation

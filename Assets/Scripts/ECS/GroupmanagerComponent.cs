@@ -12,4 +12,4 @@ public struct GroupManager : IComponentData
     public Transform[][] PreyTransform;
     public Vector3 GroupMoveSpeed;
 }
-public class GroupmManagerComponent : ComponentDataWrapper<GroupManager> { }
+public class GroupmManagerComponent : ComponentDataProxy<GroupManager> { }

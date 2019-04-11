@@ -1,7 +1,7 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -10,7 +10,7 @@ namespace Samples.Common
     public class HeadingSystem : JobComponentSystem
     {
         [BurstCompile]
-        struct RotationFromHeading : IJobProcessComponentData<Heading, Rotation>
+        struct RotationFromHeading : IJobForEach<Heading, Rotation>
         {
             public void Execute([ReadOnly] ref Heading heading, ref Rotation rotation)
             {

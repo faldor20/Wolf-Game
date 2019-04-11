@@ -1,26 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
+using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
-public class InputSystem : ComponentSystem
+public class InputSystem : JobComponentSystem
 {
 
-    struct Data
-    {
-        public readonly int Length;
-        public ComponentArray<InputComponent> InputComponents;
-    }
+    /*   struct Data
+      {
+          public readonly int Length;
+          public ComponentArray<InputComponent> InputComponents;
+      } */
 
-    [Inject] private Data _data;
-    protected override void OnUpdate ()
+    //  [Inject] private Data _data;
+    [BurstCompile]
+    struct InputSystemJob : IJobForEach<InputHandler>
     {
-        float hzIn = Input.GetAxis ("Horizontal");;
-        float vrIn = Input.GetAxis ("Vertical");
-        for (int i = 0; i < _data.Length; i++)
+        public float hzIn;
+        public float vrIn;
+        public void Execute([WriteOnly] ref InputHandler inputComponent)
         {
-            _data.InputComponents[i].Horizontal = hzIn;
-            _data.InputComponents[i].Vertical = vrIn;
+            inputComponent.Horizontal = hzIn;
+            inputComponent.Vertical = vrIn;
+
         }
     }
+    protected override JobHandle OnUpdate(JobHandle inputDependancy)
+    {
+        float horizontalIn = Input.GetAxis("Horizontal");
+        float verticalIn = Input.GetAxis("Vertical");
+
+        var job = new InputSystemJob()
+        {
+            hzIn = horizontalIn,
+            vrIn = verticalIn
+
+        };
+        return job.Schedule(this, inputDependancy);
+    }
+
 }

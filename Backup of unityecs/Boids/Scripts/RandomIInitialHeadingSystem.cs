@@ -1,15 +1,14 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Burst;
 using Unity.Jobs;
+using Unity.Mathematics;
 
 namespace Samples.Common
 {
     [DisableAutoCreation]
     [UpdateAfter(typeof(RandomInitialHeadingSystem))]
-    public class RandomInitialHeadingBarrier : BarrierSystem
-    { }
+    public class RandomInitialHeadingBarrier : BarrierSystem { }
 
     public class RandomInitialHeadingSystem : JobComponentSystem
     {
@@ -20,7 +19,7 @@ namespace Samples.Common
             m_Barrier = World.Active.GetOrCreateManager<RandomInitialHeadingBarrier>();
         }
 
-        struct SetInitialHeadingJob : IJobProcessComponentDataWithEntity<RandomInitialHeading, Heading>
+        struct SetInitialHeadingJob : IJobForEachWithEntity<RandomInitialHeading, Heading>
         {
             public EntityCommandBuffer.Concurrent Commands;
             public Unity.Mathematics.Random Random;

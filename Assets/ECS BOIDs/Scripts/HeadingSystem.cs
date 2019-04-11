@@ -14,7 +14,7 @@ namespace Samples.Common
     public class HeadingSystem : JobComponentSystem
     {
         [BurstCompile]
-        struct RotationFromHeading : IJobProcessComponentData<Heading, Rotation>
+        struct RotationFromHeading : IJobForEach<Heading, Rotation>
         {
             public void Execute([ReadOnly] ref Heading heading, ref Rotation rotation)
             {

@@ -8,7 +8,7 @@ namespace Samples.Common
 {
     [DisableAutoCreation]
     [UpdateAfter(typeof(RandomInitialHeadingSystem))]
-    public class RandomInitialHeadingBarrier : BarrierSystem { }
+    public class RandomInitialHeadingBarrier : EntityCommandBufferSystem { }
 
     public class RandomInitialHeadingSystem : JobComponentSystem
     {
@@ -16,10 +16,10 @@ namespace Samples.Common
 
         protected override void OnCreateManager()
         {
-            m_Barrier = World.Active.GetOrCreateManager<RandomInitialHeadingBarrier>();
+            m_Barrier = World.Active.GetOrCreateSystem<RandomInitialHeadingBarrier>();
         }
 
-        struct SetInitialHeadingJob : IJobProcessComponentDataWithEntity<RandomInitialHeading, Heading>
+        struct SetInitialHeadingJob : IJobForEachWithEntity<RandomInitialHeading, Heading>
         {
             public EntityCommandBuffer.Concurrent Commands;
             public Unity.Mathematics.Random Random;

@@ -20,7 +20,7 @@ public class RandomInitialHeadingSystem : JobComponentSystem
         [ReadOnly] public Unity.Mathematics.Random Random;
         public EntityCommandBuffer CommandBuffer;
 
-        // random initial heading must be set to readonly becuase it is the subject of the command buffer
+        //Random initial heading must be set to readonly becuase it is the subject of the command buffer
         public void Execute(Entity entity, int index, [ReadOnly] ref RandomInitialHeading randomInitialHeading, ref Heading heading)
         {
             heading = new Heading

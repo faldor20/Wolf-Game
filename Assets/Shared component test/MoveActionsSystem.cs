@@ -15,9 +15,22 @@ using UnityEngine;
 public class MoveActionsSystem : JobComponentSystem
 {
 
-    public List<MoveActions> m_UniqueTypes = new List<MoveActions>(10);
+    public List<MoveActions> m_UniqueTypes = new List<MoveActions> (10);
 
-    public NativeHashMap<Entity, StoreableEntityData> m_storeableEntityData = new NativeHashMap<Entity, StoreableEntityData>();
+    public NativeHashMap<Entity, StoreableEntityData> m_storeableEntityData = new NativeHashMap<Entity, StoreableEntityData> ();
+
+    BeginInitializationEntityCommandBufferSystem m_EntityCommandBufferSystem;
+    protected override void OnCreate ()
+    { //This is our barrier system
+        // Cache the BeginInitializationEntityCommandBufferSystem in a field, so we don't have to create it every frame
+        m_EntityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem> ();
+
+        m_MoveActionsGroup = GetEntityQuery (new EntityQueryDesc
+        {
+            All = new [] { ComponentType.ReadOnly<MoveActions> (), ComponentType.ReadWrite<Translation> () },
+                Options = EntityQueryOptions.Default
+        });
+    }
 
     public struct StoreableEntityData
     {
@@ -27,77 +40,81 @@ public class MoveActionsSystem : JobComponentSystem
     }
 
     [BurstCompile]
-    [RequireComponentTag(typeof(MoveActions))]
+    [RequireComponentTag (typeof (MoveActions))]
     struct ExecuteActions : IJobForEachWithEntity<Translation, Rotation>
     {
         public float deltaTime;
-        public NativeHashMap<Entity, StoreableEntityData> storableEntityData;
+       [ReadOnly] public NativeHashMap<Entity, StoreableEntityData> storableEntityData;
         [ReadOnly] public MoveActions moveActions;
+      [ReadOnly] public EntityCommandBuffer CommandBuffer;
+
         public NativeArray<Translation> postion;
-        public void Execute(Entity entity, int index, ref Translation position, ref Rotation rotation)
+        public void Execute (Entity entity, int index, ref Translation position, ref Rotation rotation)
         {
-            var storedData = storableEntityData[entity];
-            if (storedData.waitTimer <= 0 && storedData.distanceRemaining <= 0)
+           /*  var storedData = storableEntityData[entity];
+            if (storedData.waitTimer <= 0)
             {
-                if (moveActions.directions[storableEntityData[entity].stepsCompleted])
+                if (storedData.distanceRemaining > 0)
+                {
+                    position.Value = Move (position.Value, math.rotate (rotation.Value, Vector3.forward), deltaTime);
+                }
+                else
+                if (storedData.stepsCompleted < moveActions.rotations.Length)
+                {
+                    rotation.Value = math.mul (math.normalize (rotation.Value), quaternion.AxisAngle (math.up (), moveActions.rotations[storedData.stepsCompleted]));
+                }
+                else
+                {
+                    CommandBuffer.RemoveComponent<RandomInitialHeading> (entity);
+                }
 
             }
-            if (storedData.distanceRemaining > 0)
+            else
             {
-                var rot = rotation.Value;
-                var rotat = math.quaternion(rot.value);
-                quaternion.AxisAngle
-                rot.value.RotateY(-90);
-            }
+                storedData.waitTimer -= Time.deltaTime;
+            } */
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="movedirecion"> A unit vector pointing in the direction of the movement to take place in world space</param>
+        /// <param name="dt"> Delta time</param>
+        public float3 Move (float3 currentPos, float3 moveDirection, float dt)
+        {
+            var newPos = currentPos + (moveDirection * dt);
+            return newPos;
         }
     }
 
-    //movedirection must be a vector of magnitude 1
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="movedirecion"> A unit vector pinting in the direction of the movement to take place in world space</param>
-    /// <param name="dt"> Delta time</param>
-    void move(float3 movedirecion, float dt)
-    {
-        Translation = Translation + (movedirection * dt)
-    }
     private EntityQuery m_MoveActionsGroup;
 
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override JobHandle OnUpdate (JobHandle inputDeps)
     {
-        EntityManager.GetAllUniqueSharedComponentData(m_UniqueTypes);
-        Debug.Log(m_UniqueTypes.Count);
+        EntityManager.GetAllUniqueSharedComponentData (m_UniqueTypes);
+        Debug.Log (m_UniqueTypes.Count);
         for (int i = 0; i < m_UniqueTypes.Count; i++)
         {
-            m_MoveActionsGroup.SetFilter(m_UniqueTypes[i]);
-
-            var translation = m_MoveActionsGroup.ToComponentDataArray<Translation>(Allocator.TempJob, out JobHandle getTranslationJobHandle);
-            var combinedHandles = JobHandle.CombineDependencies(inputDeps, getTranslationJobHandle);
+            m_MoveActionsGroup.SetFilter (m_UniqueTypes[i]);
+            var translation = m_MoveActionsGroup.ToComponentDataArray<Translation> (Allocator.TempJob, out JobHandle getTranslationJobHandle);
+            var combinedHandles = JobHandle.CombineDependencies (inputDeps, getTranslationJobHandle);
             var moveActions = m_UniqueTypes[i];
             ExecuteActions executeActionsJob = new ExecuteActions
             {
                 deltaTime = Time.deltaTime,
                 storableEntityData = m_storeableEntityData,
                 postion = translation,
-                moveActions = m_UniqueTypes[i]
+                moveActions = m_UniqueTypes[i],
+                CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer ()
 
             };
-            JobHandle executeActionsJobHandle = executeActionsJob.Schedule(getTranslationJobHandle);
+            JobHandle executeActionsJobHandle = executeActionsJob.Schedule (this, getTranslationJobHandle);
             inputDeps = getTranslationJobHandle;
-            m_MoveActionsGroup.AddDependency(inputDeps);
 
+            m_EntityCommandBufferSystem.AddJobHandleForProducer (inputDeps);
+            m_MoveActionsGroup.AddDependency (inputDeps);
         }
-        m_UniqueTypes.Clear();
+        m_UniqueTypes.Clear ();
         return inputDeps;
-    }
-
-    protected override void OnCreate()
-    {
-        m_MoveActionsGroup = GetEntityQuery(new EntityQueryDesc
-        {
-            All = new [] { ComponentType.ReadOnly<MoveActions>(), ComponentType.ReadWrite<Translation>() },
-                Options = EntityQueryOptions.Default
-        });
     }
 }

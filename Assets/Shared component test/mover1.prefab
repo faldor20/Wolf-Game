@@ -72,8 +72,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedData:
     firstDistance: 2
-    firstDirection: 0
-    directions: 0000000001000000
+    firstRotation: 20.5
+    rotations:
+    - -17.5
+    - 24.7
+    - -43.5
     distances:
     - 2
     - 3

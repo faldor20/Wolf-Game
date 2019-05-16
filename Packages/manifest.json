@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "com.unity.analytics": "3.3.2",
-    "com.unity.burst": "1.0.2",
-    "com.unity.collab-proxy": "1.2.15",
+    "com.unity.burst": "1.0.4",
+    "com.unity.collab-proxy": "1.2.16",
     "com.unity.collections": "0.0.9-preview.18",
     "com.unity.entities": "0.0.12-preview.31",
     "com.unity.immediate-window": "1.0.0-preview.3",
@@ -11,7 +11,7 @@
     "com.unity.memoryprofiler": "0.1.0-preview.6",
     "com.unity.package-manager-ui": "2.1.2",
     "com.unity.physics": "0.0.2-preview.1",
-    "com.unity.purchasing": "2.0.3",
+    "com.unity.purchasing": "2.0.6",
     "com.unity.rendering.hybrid": "0.0.1-preview.11",
     "com.unity.test-framework.performance": "1.0.6-preview",
     "com.unity.textmeshpro": "2.0.0",

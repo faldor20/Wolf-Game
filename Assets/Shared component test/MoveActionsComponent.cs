@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
     [Serializable]
-    public struct MoveActions : ISharedComponentData
+    public struct MoveActions : ISharedComponentData,IReceivingArrayData
     {
 
         public float firstDistance;
@@ -28,5 +28,4 @@ public enum Direction
     left = 1,
     right = 0
 }
-
-public class MoveActionsComponent : SharedComponentDataProxy<MoveActions> { }
+public class MoveActionsComponent : SharedComponentDataProxy<MoveActions>  { }

@@ -13,6 +13,7 @@ using UnityEngine;
 // It actually sets the rotation from the heading.
 //the heading is set in a nother system
 // why does this system need to exist? could the rotation not have been set directly?
+[UpdateAfter(typeof(MoveActionsProxy))]
 public class MoveActionsSystem : JobComponentSystem
 {
 
@@ -40,9 +41,24 @@ public class MoveActionsSystem : JobComponentSystem
         public int distanceRemaining;
     }
 
-    [BurstCompile]
+    protected override void OnStopRunning()
+    {
+        foreach (var action in m_previousActions)
+        {
+            action.Dispose();
+        }
+    }
+    public void OnDisable()
+    {
+        foreach (var action in m_previousActions)
+        {
+            action.Dispose();
+        }
+    }
+
+    //  [BurstCompile]
     [RequireComponentTag(typeof(MoveActions))]
-    struct ExecuteActions : IJobForEachWithEntity<Translation, Rotation>
+    struct ExecuteActions : IJobForEachWithEntity<Translation, Rotation, MoveProgress>
     {
         public float deltaTime;
         // [ReadOnly] public NativeHashMap<Entity, StoreableEntityData> storableEntityData;
@@ -53,32 +69,37 @@ public class MoveActionsSystem : JobComponentSystem
         [ReadOnly] public EntityCommandBuffer CommandBuffer;
         //  public Unity.Mathematics.Random randomizer;
         //    public NativeArray<Translation> postion;
-        public void Execute(Entity entity, int index, ref Translation position, ref Rotation rotation)
+        public void Execute(Entity entity, int index, ref Translation position, ref Rotation rotation, ref MoveProgress progress)
         {
-            // randomizer = new Unity.Mathematics.Random ();
-            /*  var storedData = storableEntityData[entity];
-             if (storedData.waitTimer <= 0)
-             {
-                 if (storedData.distanceRemaining > 0)
-                 {
-                     position.Value = Move (position.Value, math.rotate (rotation.Value, Vector3.forward), deltaTime);
-                 }
-                 else
-                 if (storedData.stepsCompleted < moveActions.rotations.Length)
-                 {
-                     rotation.Value = math.mul (math.normalize (rotation.Value), quaternion.AxisAngle (math.up (), moveActions.rotations[storedData.stepsCompleted]));
-                 }
-                 else
-                 {
-                     CommandBuffer.RemoveComponent<RandomInitialHeading> (entity);
-                 }
 
-             }
-             else
-             {
-                 storedData.waitTimer -= Time.deltaTime;
-             } */
-            position.Value += new float3(0, 0, 0.1f) * deltaTime;
+            if (progress.waitTimer <= 0)
+            {
+                if (progress.distanceRemaining > 0)
+                {
+                    var newPos= Move(position.Value, math.rotate(rotation.Value, Vector3.forward), deltaTime);
+                    progress.distanceRemaining -= math.length((newPos - position.Value));
+                    position.Value = newPos;
+                }
+                else if (progress.stepsCompleted < rotations.Length)
+                {
+                    rotation.Value = math.mul(math.normalize(rotation.Value), quaternion.AxisAngle(math.up(), rotations[progress.stepsCompleted]));
+
+                    progress.waitTimer = 3;
+                    progress.distanceRemaining = distances[progress.stepsCompleted];
+
+                    progress.stepsCompleted++;
+                }
+                else if (progress.stepsCompleted >= rotations.Length)
+                {
+                    CommandBuffer.RemoveComponent<MoveActions>(entity);
+                    CommandBuffer.RemoveComponent<MoveProgress>(entity);
+                }
+
+            }
+            else
+            {
+                progress.waitTimer -= deltaTime;
+            }
 
         }
         /// <summary>
@@ -104,52 +125,85 @@ public class MoveActionsSystem : JobComponentSystem
         }
         return finalString;
     }
+    List<PreviousActions> m_previousActions = new List<PreviousActions>();
+
+    struct PreviousActions : IDisposable
+    {
+        public NativeArray<float> MoveActionsDistances;
+        public NativeArray<float> MoveActionsRotations;
+        public void Dispose()
+        {
+            MoveActionsDistances.Dispose();
+            MoveActionsRotations.Dispose();
+        }
+    }
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         EntityManager.GetAllUniqueSharedComponentData(m_UniqueTypes);
         //  Debug.Log (m_UniqueTypes.Count);
-        //we start at one because the first one is simply the uninitialised version
-        for (int i = 1; i < m_UniqueTypes.Count; i++)
+        //we start at one because the first one is simply the uninitialised version 
+        if (m_UniqueTypes.Count > 1)
         {
-            //  Debug.Log ("distance: " + ArrayToString( m_UniqueTypes[i].distances));
-            //  Debug.Log ("rotations: " + ArrayToString(m_UniqueTypes[i].rotations));
-            m_MoveActionsGroup.SetFilter(m_UniqueTypes[i]);
-
-            NativeArray<float> moveActionsDistances = new NativeArray<float>();
-            NativeArray<float> moveActionsRotations = new NativeArray<float>();
-            if (m_UniqueTypes[i].distances.Length != m_UniqueTypes[i].rotations.Length) { Debug.LogError("there must be a rotation for each direction given"); }
-            if (m_UniqueTypes[i].distances.Length > 0) { moveActionsDistances = new NativeArray<float>(m_UniqueTypes[i].distances, Allocator.TempJob); }
-            else { Debug.LogError("movactions distance has no data, without any actions this will fail."); }
-            if (m_UniqueTypes[i].rotations.Length > 0) { moveActionsRotations = new NativeArray<float>(m_UniqueTypes[i].rotations, Allocator.TempJob); }
-            else { Debug.LogError("movactions rotations has no data, without any actions this will fail."); }
-
-            //  var tran else { Debug.LogError("movactions has no data, without any actiosn this will fail.") }slation = m_MoveActionsGroup.ToComponentDataArray<Translation> (Allocator.TempJob, out JobHandle getTranslationJobHandle);
-            //    var combinedHandles = JobHandle.CombineDependencies (inputDeps, getTranslationJobHandle);
-            var moveActions = m_UniqueTypes[i];
-            ExecuteActions executeActionsJob = new ExecuteActions
+            for (int i = 1; i < m_UniqueTypes.Count; i++)
             {
-                deltaTime = Time.deltaTime,
-                // storableEntityData = m_storeableEntityData,
-                // postion = translation,
-                //moveActions = m_UniqueTypes[i],
-                rotations = moveActionsRotations,
-                distances = moveActionsDistances,
-                CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer()
+                //  Debug.Log ("distance: " + ArrayToString( m_UniqueTypes[i].distances));
+                //  Debug.Log ("rotations: " + ArrayToString(m_UniqueTypes[i].rotations));
+                m_MoveActionsGroup.SetFilter(m_UniqueTypes[i]);
+                int cacheIndex = i - 1;
+                NativeArray<float> moveActionsDistances = new NativeArray<float>();
+                NativeArray<float> moveActionsRotations = new NativeArray<float>();
 
-            };
-            JobHandle executeActionsJobHandle = executeActionsJob.Schedule(this, inputDeps);
-            inputDeps = executeActionsJobHandle;
+                if (m_UniqueTypes[i].distances.Length != m_UniqueTypes[i].rotations.Length) { Debug.LogError("there must be a rotation for each direction given"); }
+                if (m_UniqueTypes[i].distances.Length > 0) { moveActionsDistances = new NativeArray<float>(m_UniqueTypes[i].distances, Allocator.TempJob); }
+                else { Debug.LogError("movactions distance has no data, without any actions this will fail."); }
+                if (m_UniqueTypes[i].rotations.Length > 0) { moveActionsRotations = new NativeArray<float>(m_UniqueTypes[i].rotations, Allocator.TempJob); }
+                else { Debug.LogError("movactions rotations has no data, without any actions this will fail."); }
 
-            m_EntityCommandBufferSystem.AddJobHandleForProducer(inputDeps);
-            m_MoveActionsGroup.AddDependency(inputDeps);
+                //  var tran else { Debug.LogError("movactions has no data, without any actiosn this will fail.") }slation = m_MoveActionsGroup.ToComponentDataArray<Translation> (Allocator.TempJob, out JobHandle getTranslationJobHandle);
+                //    var combinedHandles = JobHandle.CombineDependencies (inputDeps, getTranslationJobHandle);
+                var moveActions = m_UniqueTypes[i];
+
+                //Essentially what this is doing is checking each time the job runs if the
+                var nextActions = new PreviousActions
+                {
+                    MoveActionsDistances = moveActionsDistances,
+                    MoveActionsRotations = moveActionsRotations
+                };
+                if (cacheIndex > (m_previousActions.Count - 1))
+                {
+                    m_previousActions.Add(nextActions);
+                }
+                else
+                {
+                    m_previousActions[cacheIndex].Dispose();
+                }
+                m_previousActions[cacheIndex] = nextActions;
+
+                ExecuteActions executeActionsJob = new ExecuteActions
+                {
+                    deltaTime = Time.deltaTime,
+                    // storableEntityData = m_storeableEntityData,
+                    // postion = translation,
+                    //moveActions = m_UniqueTypes[i],
+                    rotations = moveActionsRotations,
+                    distances = moveActionsDistances,
+                    CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer()
+
+                };
+
+                JobHandle executeActionsJobHandle = executeActionsJob.Schedule(this, inputDeps);
+                inputDeps = executeActionsJobHandle;
+
+                m_EntityCommandBufferSystem.AddJobHandleForProducer(inputDeps);
+                m_MoveActionsGroup.AddDependency(inputDeps);
+                //moveActionsRotations.Dispose();
+                // moveActionsDistances.Dispose();
+            }
         }
         m_UniqueTypes.Clear();
 
         return inputDeps;
     }
-    protected override void OnStopRunning()
-    {
 
-    }
 }

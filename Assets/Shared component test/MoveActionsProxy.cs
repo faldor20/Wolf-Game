@@ -21,8 +21,8 @@ public class MoveActionsProxy : MonoBehaviour, IConvertGameObjectToEntity
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
         Debug.Log(Rotations.Length);
-        var outRotations = new NativeArray<float>(Rotations, Allocator.Persistent);
-        Debug.Log("outrotations: " + MoveActionsSystem.ArrayToString(outRotations));
+       // var outRotations = new NativeArray<float>(Rotations, Allocator.Persistent);
+       // Debug.Log("outrotations: " + MoveActionsSystem.ArrayToString(outRotations));
         dstManager.AddSharedComponentData(entity, new MoveActions
         {
             firstDistance = FirstDistance,
@@ -30,7 +30,7 @@ public class MoveActionsProxy : MonoBehaviour, IConvertGameObjectToEntity
                 rotations = Rotations,
                 distances = Distances
         });
-        outRotations.Dispose();
+      //  outRotations.Dispose();
     }
 
 }

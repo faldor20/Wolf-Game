@@ -1,0 +1,41 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+int textureX;
+int textureY;
+float X;
+float Y;
+int Z;
+int Multiple;
+float2 z;
+float Map(float value, float minFrom, float maxFrom, float minTo, float maxTo)
+{
+    return minTo + (value - minFrom) * (maxTo - minTo) / (maxFrom - minFrom);
+}
+
+[numthreads(8, 8, 1)] void CSMain(uint3 id: SV_DispatchThreadID) {
+    //TODO: insert actual code here!
+  z = float2(Map(id.x, 0, textureX, X, 1),Map(id.y, 0, textureY, Y, 1));
+   // float x0 = Map(id.x, 0, textureX, X, 1); //scaled x coordinate of pixel (scaled to lie in the Mandelbrot X scale (-2.5, 1))
+   // float y0 = Map(id.y, 0, textureY, Y, 1);   // scaled y coordinate of pixel (scaled to lie in the Mandelbrot Y scale (-1, 1))
+    float x = 0.0;
+    float y = 0.0;
+    uint iteration = 0;
+    uint max_iteration = 1000;
+
+    // [loop]
+    [unroll(255)] 
+    while (length(z) <=  2)
+    {
+      z=float2(z.x*z.x-z.y*z.y,2*z.x*z.y)+(float2)id;
+        iteration = iteration + 1;
+    }
+    //we do this to convert it from iterations toa color gradient
+   float colour = iteration / 255;  //TODO: move this to the c# script and pass it is a varibale
+    //color = palette[iteration]; //pallet should be a gradient;
+    // plot(Px, Py, color);
+    Result[id.xy] = float4(colour, (id.x & 1) / Multiple, (id.y & Z) / Multiple, 0.0);
+}
+///

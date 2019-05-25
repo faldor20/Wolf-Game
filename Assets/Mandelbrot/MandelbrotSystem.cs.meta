@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 5f9c33b132d4e464687f9cd1ea0cee7a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - MandelbrotShader: {fileID: 7200000, guid: 256cf200e0574e745aa92ba712d1d1fb, type: 3}
+  - result: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

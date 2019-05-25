@@ -146,7 +146,7 @@ public class BoidMoveSystem : JobComponentSystem
                     }
                 }
 
-                #region OldFunctions(keeping incase i want to change functionallity on the fly)
+                #region OldFunctions(keeping incase i want to change functionality on the fly)
                 /* 
                 if (orderedBoidActions[i].actionType == BoidActionType.Alignment)
                 {

@@ -57,5 +57,8 @@
         "**/.history/**": true,
         "**/BackupOfUnityecs/**": true,
         "**/GalacticConquest/**": true
+    },
+    "files.associations": {
+        "*.compute": "c"
     }
 }

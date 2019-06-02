@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6396618460336376097}
   - component: {fileID: 8706589446416629701}
   - component: {fileID: 330716877002226578}
-  - component: {fileID: 5565963887376667140}
-  - component: {fileID: 2605798257689415647}
-  - component: {fileID: 4905748177724401111}
+  - component: {fileID: 1632977223}
+  - component: {fileID: 1632977224}
+  - component: {fileID: 7154141567400541609}
   m_Layer: 0
   m_Name: mover1
   m_TagString: Untagged
@@ -80,7 +80,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6396618460336376100}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &5565963887376667140
+--- !u!114 &1632977223
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &2605798257689415647
+--- !u!114 &1632977224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,17 +105,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e96bba4c8719b949b68c5beedff4f24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FirstDistance: 5
-  FirstRotation: -41.1
-  Rotations:
-  - 13.3
-  - -12
-  - 9.5
-  Distances:
-  - 2
-  - 1
-  - 4
---- !u!114 &4905748177724401111
+  FirstDistance: 3
+  FirstRotation: 17.5
+  Actions:
+  - rotation: 10
+    distance: 3
+  - rotation: 90
+    distance: 5
+  - rotation: 50
+    distance: 10
+--- !u!114 &7154141567400541609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

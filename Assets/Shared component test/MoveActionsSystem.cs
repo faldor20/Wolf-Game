@@ -17,19 +17,19 @@ using UnityEngine;
 public class MoveActionsSystem : JobComponentSystem
 {
 
-    public List<MoveActions> m_UniqueTypes = new List<MoveActions> (5);
+    public List<MoveActions> m_UniqueTypes = new List<MoveActions>(5);
 
     //   public NativeHashMap<Entity, StoreableEntityData> m_storeableEntityData = new NativeHashMap<Entity, StoreableEntityData> ();
 
     BeginInitializationEntityCommandBufferSystem m_EntityCommandBufferSystem;
-    protected override void OnCreate ()
+    protected override void OnCreate()
     { //This is our barrier system
         // Cache the BeginInitializationEntityCommandBufferSystem in a field, so we don't have to create it every frame
-        m_EntityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem> ();
+        m_EntityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
 
-        m_MoveActionsGroup = GetEntityQuery (new EntityQueryDesc
+        m_MoveActionsGroup = GetEntityQuery(new EntityQueryDesc
         {
-            All = new [] { ComponentType.ReadOnly<MoveActions> () },
+            All = new [] { ComponentType.ReadOnly<MoveActions>() },
                 Options = EntityQueryOptions.Default
         });
     }
@@ -41,26 +41,26 @@ public class MoveActionsSystem : JobComponentSystem
         public int distanceRemaining;
     }
 
-    protected override void OnStopRunning ()
+    protected override void OnStopRunning()
     {
         foreach (var action in m_previousActions)
         {
-            action.MoveActionsRotations.Dispose ();
-            action.MoveActionsDistances.Dispose ();
+            action.MoveActionsRotations.Dispose();
+            action.MoveActionsDistances.Dispose();
 
         }
     }
-    public void OnDisable ()
+    public void OnDisable()
     {
         foreach (var action in m_previousActions)
         {
-            action.MoveActionsRotations.Dispose ();
-            action.MoveActionsDistances.Dispose ();
+            action.MoveActionsRotations.Dispose();
+            action.MoveActionsDistances.Dispose();
         }
     }
 
     //  [BurstCompile]
-    [RequireComponentTag (typeof (MoveActions))]
+    [RequireComponentTag(typeof(MoveActions))]
     struct ExecuteActions : IJobForEachWithEntity<Translation, Rotation, MoveProgress>
     {
         public float deltaTime;
@@ -72,45 +72,46 @@ public class MoveActionsSystem : JobComponentSystem
         [ReadOnly] public EntityCommandBuffer CommandBuffer;
         //  public Unity.Mathematics.Random randomizer;
         //    public NativeArray<Translation> postion;
-        public void Execute (Entity entity, int index, ref Translation position, ref Rotation rotation, ref MoveProgress progress)
+        public void Execute(Entity entity, int index, ref Translation position, ref Rotation rotation, ref MoveProgress progress)
         {
 
-            /*  if (progress.waitTimer <= 0)
-             {
-                 if (progress.distanceRemaining > 0)
-                 {
-                     var newPos = Move (position.Value, math.rotate (rotation.Value, Vector3.forward), deltaTime);
-                     progress.distanceRemaining -= math.length ((newPos - position.Value));
-                     position.Value = newPos;
-                 }
-                 else if (progress.stepsCompleted < rotations.Length)
-                 {
-                     rotation.Value = math.mul (math.normalize (rotation.Value), quaternion.AxisAngle (math.up (), rotations[progress.stepsCompleted]));
+            if (progress.waitTimer <= 0)
+            {
+                if (progress.distanceRemaining > 0)
+                {
+                    var newPos = Move(position.Value, math.rotate(rotation.Value, Vector3.forward), deltaTime);
+                    progress.distanceRemaining -= math.length((newPos - position.Value));
+                    position.Value = newPos;
+                }
+                else if (progress.stepsCompleted < rotations.Length)
+                {
+                    rotation.Value = math.mul(math.normalize(rotation.Value), quaternion.AxisAngle(math.up(), rotations[progress.stepsCompleted]));
 
-                     progress.waitTimer = 3;
-                     progress.distanceRemaining = distances[progress.stepsCompleted];
+                    progress.waitTimer = 3;
+                    progress.distanceRemaining = distances[progress.stepsCompleted];
 
-                     progress.stepsCompleted++;
-                 }
-                 else if (progress.stepsCompleted >= rotations.Length)
-                 {
-                     CommandBuffer.RemoveComponent<MoveActions> (entity);
-                     CommandBuffer.RemoveComponent<MoveProgress> (entity);
-                 }
+                    progress.stepsCompleted++;
+                }
+                else if (progress.stepsCompleted >= rotations.Length)
+                {
+                    CommandBuffer.RemoveComponent<MoveActions>(entity);
+                    CommandBuffer.RemoveComponent<MoveProgress>(entity);
+                }
 
-             }
-             else
-             {
-                 progress.waitTimer -= deltaTime;
-             } */
+            }
+            else
+            {
+                progress.waitTimer -= deltaTime;
+            }
 
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="movedirecion"> A unit vector pointing in the direction of the movement to take place in world space</param>
         /// <param name="dt"> Delta time</param>
-        public float3 Move (float3 currentPos, float3 moveDirection, float dt)
+        public float3 Move(float3 currentPos, float3 moveDirection, float dt)
         {
             var newPos = currentPos + (moveDirection * dt);
             return newPos;
@@ -119,39 +120,40 @@ public class MoveActionsSystem : JobComponentSystem
 
     private EntityQuery m_MoveActionsGroup;
 
-    public static String ArrayToString (NativeArray<float> array)
+    public static String ArrayToString(NativeArray<float> array)
     {
         String finalString = "";
         foreach (var item in array)
         {
-            finalString += item.ToString () + "|";
+            finalString += item.ToString() + "|";
         }
         return finalString;
     }
-    List<PreviousActions> m_previousActions = new List<PreviousActions> ();
+    List<PreviousActions> m_previousActions = new List<PreviousActions>();
 
     struct PreviousActions : IDisposable
     {
         public NativeArray<float> MoveActionsDistances;
         public NativeArray<float> MoveActionsRotations;
 
-        public void Dispose ()
+        public void Dispose()
         {
-            MoveActionsDistances.Dispose ();
-            MoveActionsRotations.Dispose ();
+            MoveActionsDistances.Dispose();
+            MoveActionsRotations.Dispose();
         }
     }
 
-    protected override JobHandle OnUpdate (JobHandle inputDeps)
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        EntityManager.GetAllUniqueSharedComponentData (m_UniqueTypes);
-        var a = EntityManager.GetSharedComponentOrderVersion<MoveActions> (m_UniqueTypes[1]);
-        var b = EntityManager.GetSharedComponentOrderVersion<MoveActions> (m_UniqueTypes[2]);
+        EntityManager.GetAllUniqueSharedComponentData(m_UniqueTypes);
+
+        // var a = EntityManager.GetSharedComponentOrderVersion<MoveActions> (m_UniqueTypes[0]);
+        // var b = EntityManager.GetSharedComponentOrderVersion<MoveActions> (m_UniqueTypes[2]);
         foreach (var uniqueType in m_UniqueTypes)
         {
-            Debug.Log (uniqueType+" :" +EntityManager.GetSharedComponentOrderVersion<MoveActions> (uniqueType));
+            Debug.Log(uniqueType + " :" + EntityManager.GetSharedComponentOrderVersion<MoveActions>(uniqueType));
         }
-        Debug.Log ("unique types:" + m_UniqueTypes.Count);
+        Debug.Log("unique types:" + m_UniqueTypes.Count);
         //we start at one because the first one is simply the uninitialised version 
         if (m_UniqueTypes.Count > 1)
         {
@@ -159,10 +161,10 @@ public class MoveActionsSystem : JobComponentSystem
             {
                 //  Debug.Log ("distance: " + ArrayToString( m_UniqueTypes[i].distances));
                 //  Debug.Log ("rotations: " + ArrayToString(m_UniqueTypes[i].rotations));
-                m_MoveActionsGroup.SetFilter (m_UniqueTypes[i]);
+                m_MoveActionsGroup.SetFilter(m_UniqueTypes[i]);
                 int cacheIndex = i - 1;
-                NativeArray<float> moveActionsDistances = new NativeArray<float> (1, Allocator.TempJob);
-                NativeArray<float> moveActionsRotations = new NativeArray<float> (1, Allocator.TempJob);
+                NativeArray<float> moveActionsDistances = new NativeArray<float>(1, Allocator.TempJob);
+                NativeArray<float> moveActionsRotations = new NativeArray<float>(1, Allocator.TempJob);
 
                 /*     if (m_UniqueTypes[i].distances.Length != m_UniqueTypes[i].rotations.Length) { Debug.LogError ("there must be a rotation for each direction given"); }
                 if (m_UniqueTypes[i].distances.Length > 0) { moveActionsDistances = new NativeArray<float> (m_UniqueTypes[i].distances, Allocator.TempJob); }
@@ -182,12 +184,12 @@ public class MoveActionsSystem : JobComponentSystem
                 };
                 if (cacheIndex > (m_previousActions.Count - 1))
                 {
-                    m_previousActions.Add (nextActions);
+                    m_previousActions.Add(nextActions);
                 }
                 else
                 {
-                    m_previousActions[cacheIndex].MoveActionsDistances.Dispose ();
-                    m_previousActions[cacheIndex].MoveActionsRotations.Dispose ();
+                    m_previousActions[cacheIndex].MoveActionsDistances.Dispose();
+                    m_previousActions[cacheIndex].MoveActionsRotations.Dispose();
                 }
                 m_previousActions[cacheIndex] = nextActions;
 
@@ -199,20 +201,20 @@ public class MoveActionsSystem : JobComponentSystem
                     //moveActions = m_UniqueTypes[i],
                     rotations = moveActionsRotations,
                     distances = moveActionsDistances,
-                    CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer ()
+                    CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer()
 
                 };
 
-                JobHandle executeActionsJobHandle = executeActionsJob.Schedule (this, inputDeps);
+                JobHandle executeActionsJobHandle = executeActionsJob.Schedule(this, inputDeps);
                 inputDeps = executeActionsJobHandle;
 
-                m_EntityCommandBufferSystem.AddJobHandleForProducer (inputDeps);
-                m_MoveActionsGroup.AddDependency (inputDeps);
+                m_EntityCommandBufferSystem.AddJobHandleForProducer(inputDeps);
+                m_MoveActionsGroup.AddDependency(inputDeps);
                 //moveActionsRotations.Dispose();
                 // moveActionsDistances.Dispose();
             }
         }
-        m_UniqueTypes.Clear ();
+        m_UniqueTypes.Clear();
 
         return inputDeps;
     }

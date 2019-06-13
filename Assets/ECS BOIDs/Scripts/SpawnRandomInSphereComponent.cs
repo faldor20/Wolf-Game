@@ -1,4 +1,4 @@
-﻿using System;
+﻿/* using System;
 using Unity.Entities;
 using UnityEngine;
 
@@ -10,4 +10,4 @@ public struct SpawnRandomInSphere : ISharedComponentData
     public int count;
 }
 
-public class SpawnRandomInSphereComponent : SharedComponentDataProxy<SpawnRandomInSphere> { }
+public class SpawnRandomInSphereComponent : SharedComponentDataProxy<SpawnRandomInSphere> { } */

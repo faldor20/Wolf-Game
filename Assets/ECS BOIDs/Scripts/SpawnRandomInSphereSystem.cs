@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/* using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -104,4 +104,4 @@ namespace Samples.Common
             spawnInstances.Dispose();
         }
     }
-}
+} */

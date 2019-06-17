@@ -60,6 +60,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -107,13 +108,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FirstDistance: 3
   FirstRotation: 17.5
-  Actions:
-  - rotation: 10
-    distance: 3
-  - rotation: 90
-    distance: 5
-  - rotation: 50
-    distance: 10
+  Rotations:
+  - 1
+  - 2
+  Distances:
+  - 5
+  - 4
 --- !u!114 &7154141567400541609
 MonoBehaviour:
   m_ObjectHideFlags: 0

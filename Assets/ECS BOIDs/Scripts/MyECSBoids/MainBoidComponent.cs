@@ -5,11 +5,10 @@ using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 [Serializable]
 public struct MainBoid : ISharedComponentData, IEquatable<MainBoid>
 {
-    private int hashCode;
-
     public BoidAction[] boidActions;
     public NonBoidAction[] nonBoidActions;
     public int group;
@@ -27,24 +26,35 @@ public struct MainBoid : ISharedComponentData, IEquatable<MainBoid>
 
         return (a == b);
     }
-
-    private int GetintArrayHash(int[] toBeHashed)
+    public int hashArray(object hash)
     {
-        return ((IStructuralEquatable) toBeHashed).GetHashCode(EqualityComparer<float>.Default);
+        var x = (IStructuralEquatable) hash;
+
+        if (hash is int[])
+        {
+            return x.GetHashCode(EqualityComparer<int>.Default);
+        }
+        else if (hash is float[])
+        {
+            return x.GetHashCode(EqualityComparer<float>.Default);
+        }
+        else
+        {
+            Debug.LogError("can't classify the array you are attempting to hash, either add another option or change what you are putting in");
+            return 0;
+        }
     }
 
     public override int GetHashCode()
     {
         // TODO: write your implementation of GetHashCode() here
-        if (hashCode == 0)
-        {
-            var boidActionsHash = boidActions.GetHashCode();
-            var nonBoidActionsHash = nonBoidActions.GetHashCode();
 
-            float[] combination = { boidActionsHash, nonBoidActionsHash, group };
+        var boidActionsHash = boidActions.GetHashCode();
+        var nonBoidActionsHash = nonBoidActions.GetHashCode();
 
-            hashCode = ((IStructuralEquatable) combination).GetHashCode(EqualityComparer<float>.Default);
-        }
+        float[] combination = { boidActionsHash, nonBoidActionsHash, group };
+
+        var hashCode = hashArray(combination);
 
         return hashCode.GetHashCode();
     }
@@ -68,7 +78,7 @@ public struct NonBoidAction
     public NonBoidActionType actionType;
     public float range;
     public float weight;
-    public bool divideByNearby;
+    public bool divideByNearby; //I think this means divide the effect by how many boids are nearby, usefully for stuff like cohesion to drop off as a  boid gets close to other boids
     public float viewangle;
 }
 //Actions which involve checking other boids

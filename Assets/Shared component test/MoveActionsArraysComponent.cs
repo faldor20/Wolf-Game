@@ -9,8 +9,6 @@ using UnityEngine;
 public struct MoveActionsArrays : ISharedComponentData, ISupplyingArrayData, IEquatable<MoveActionsArrays>
 {
 
-    private int hashCode;
-
     public float[] rotations;
     public float[] distances;
 
@@ -39,12 +37,10 @@ public struct MoveActionsArrays : ISharedComponentData, ISupplyingArrayData, IEq
     public override int GetHashCode()
     {
         // TODO: write your implementation of GetHashCode() here
-        if (hashCode == 0)
-        {
-            var rotationsHash = GetfloatArrayHash(rotations);
-            var distancesHash = GetfloatArrayHash(distances);
-            hashCode = distancesHash ^ rotationsHash;
-        }
+
+        var rotationsHash = GetfloatArrayHash(rotations);
+        var distancesHash = GetfloatArrayHash(distances);
+        var hashCode = distancesHash ^ rotationsHash;
 
         return hashCode.GetHashCode();
     }

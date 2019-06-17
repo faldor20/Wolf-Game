@@ -75,37 +75,36 @@ public class MoveActionsSystem : JobComponentSystem
         public void Execute(Entity entity, int index, ref Translation position, ref Rotation rotation, ref MoveProgress progress)
         {
 
-            if (progress.waitTimer <= 0)
-            {
-                if (progress.distanceRemaining > 0)
-                {
-                    var newPos = Move(position.Value, math.rotate(rotation.Value, Vector3.forward), deltaTime);
-                    progress.distanceRemaining -= math.length((newPos - position.Value));
-                    position.Value = newPos;
-                }
-                else if (progress.stepsCompleted < rotations.Length)
-                {
-                    rotation.Value = math.mul(math.normalize(rotation.Value), quaternion.AxisAngle(math.up(), rotations[progress.stepsCompleted]));
+            /*  if (progress.waitTimer <= 0)
+             {
+                 if (progress.distanceRemaining > 0)
+                 {
+                     var newPos = Move (position.Value, math.rotate (rotation.Value, Vector3.forward), deltaTime);
+                     progress.distanceRemaining -= math.length ((newPos - position.Value));
+                     position.Value = newPos;
+                 }
+                 else if (progress.stepsCompleted < rotations.Length)
+                 {
+                     rotation.Value = math.mul (math.normalize (rotation.Value), quaternion.AxisAngle (math.up (), rotations[progress.stepsCompleted]));
 
-                    progress.waitTimer = 3;
-                    progress.distanceRemaining = distances[progress.stepsCompleted];
+                     progress.waitTimer = 3;
+                     progress.distanceRemaining = distances[progress.stepsCompleted];
 
-                    progress.stepsCompleted++;
-                }
-                else if (progress.stepsCompleted >= rotations.Length)
-                {
-                    CommandBuffer.RemoveComponent<MoveActions>(entity);
-                    CommandBuffer.RemoveComponent<MoveProgress>(entity);
-                }
+                     progress.stepsCompleted++;
+                 }
+                 else if (progress.stepsCompleted >= rotations.Length)
+                 {
+                     CommandBuffer.RemoveComponent<MoveActions> (entity);
+                     CommandBuffer.RemoveComponent<MoveProgress> (entity);
+                 }
 
-            }
-            else
-            {
-                progress.waitTimer -= deltaTime;
-            }
-
+             }
+             else
+             {
+                 progress.waitTimer -= deltaTime;
+             } */
+            position.Value += new float3(0, 0, 0.1f) * deltaTime;
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -151,7 +150,7 @@ public class MoveActionsSystem : JobComponentSystem
         // var b = EntityManager.GetSharedComponentOrderVersion<MoveActions> (m_UniqueTypes[2]);
         foreach (var uniqueType in m_UniqueTypes)
         {
-            Debug.Log(uniqueType + " :" + EntityManager.GetSharedComponentOrderVersion<MoveActions>(uniqueType));
+            Debug.Log(uniqueType + " ID :" + EntityManager.GetSharedComponentOrderVersion<MoveActions>(uniqueType));
         }
         Debug.Log("unique types:" + m_UniqueTypes.Count);
         //we start at one because the first one is simply the uninitialised version 
